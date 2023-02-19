@@ -1,0 +1,906 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Swiss public transport API",
+    "description": "The Transport API allows developers to build their own applications using public timetable data for Swiss public transport.\nSome useful links:\n- [Rate limit](https://timetable.search.ch/api/help)\n- [The source code of the Transport API can be found on GitHub](https://github.com/OpendataCH/Transport)",
+    "contact": {
+      "email": "transport@opendata.ch"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://transport.opendata.ch/",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "resources"
+    }
+  ],
+  "paths": {
+    "/locations": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "summary": "Returns the matching locations for the given parameters",
+        "description": "Returns the matching locations for the given parameters. Either query or ( x and y ) are required. The locations in the response are scored to determine which is the most exact location. This method can return a refine response, what means that the request has to be redone.",
+        "operationId": "getLocations",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Specifies the location name to search for",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Basel"
+            }
+          },
+          {
+            "name": "x",
+            "in": "query",
+            "description": "Latitude",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "example": 47.476001
+            }
+          },
+          {
+            "name": "y",
+            "in": "query",
+            "description": "Longitude",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "example": 8.30613
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Only with query parameter. Specifies the location type.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "station",
+                "poi",
+                "address"
+              ],
+              "default": "all"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connections": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "summary": "Returns the next connections from a location to another.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "Specifies the departure location of the connection",
+            "schema": {
+              "type": "string",
+              "example": "Lausanne"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "Specifies the arrival location of the connection",
+            "schema": {
+              "type": "string",
+              "example": "Genève"
+            }
+          },
+          {
+            "name": "via",
+            "in": "query",
+            "description": "Specifies up to five via locations",
+            "schema": {
+              "type": "string",
+              "example": "Bern"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date of the connection, in the format YYYY-MM-DD",
+            "schema": {
+              "type": "string",
+              "example": "2012-03-25"
+            }
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "description": "Time of the connection, in the format hh:mm",
+            "schema": {
+              "type": "string",
+              "example": "17:30"
+            }
+          },
+          {
+            "name": "isArrivalTime",
+            "in": "query",
+            "description": "If set to 1 the passed date and time is the arrival time",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "transportations",
+            "in": "query",
+            "description": "Transportation means",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "train",
+                  "tram",
+                  "ship",
+                  "bus",
+                  "cableway"
+                ]
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Specifies the number of connections to return",
+            "schema": {
+              "type": "integer",
+              "example": 4
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Allows pagination of connections",
+            "schema": {
+              "type": "integer",
+              "example": 3
+            }
+          },
+          {
+            "name": "direct",
+            "in": "query",
+            "description": "If set to 1 only direct connections are allowed",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "sleeper",
+            "in": "query",
+            "description": "If set to 1 only night trains containing beds are allowed",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "couchette",
+            "in": "query",
+            "description": "If set to 1 only night trains containing couchettes are allowed",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "bike",
+            "in": "query",
+            "description": "If set to 1 only trains allowing the transport of bicycles are allowed",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "accessibility",
+            "in": "query",
+            "description": "Possible values are independent_boarding, assisted_boarding, and advanced_notice",
+            "schema": {
+              "type": "string",
+              "example": "independent_boarding"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stationboard": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "summary": "Returns the next connections leaving from a specific location.",
+        "parameters": [
+          {
+            "name": "station",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Specifies the location of which a stationboard should be returned.",
+            "example": "Aarau"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The id of the station whose stationboard should be returned. Alternative to the station parameter; one of these two is required. If both an id and a station are specified the id has precedence.",
+            "example": 8503059
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of departing connections to return. This is not a hard limit - if multiple connections leave at the same time it'll return any connections that leave at the same time as the last connection within the limit.",
+            "example": 15
+          },
+          {
+            "name": "transportations",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Transportation means; one or more of train, tram, ship, bus, cableway",
+            "example": [
+              "tram",
+              "bus"
+            ]
+          },
+          {
+            "name": "datetime",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Date and time of departing connections, in the format YYYY-MM-DD hh:mm.",
+            "example": "2012-03-25 17:30"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "departure (default) or arrival",
+            "example": "departure"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stationboard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Coordinates": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "WGS84"
+          },
+          "x": {
+            "type": "number",
+            "format": "double",
+            "example": 47.547408
+          },
+          "y": {
+            "type": "number",
+            "format": "double",
+            "example": 7.589547
+          }
+        }
+      },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "stations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "000000022"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Basel"
+                },
+                "score": {
+                  "type": "number",
+                  "format": "float",
+                  "example": 0.5
+                },
+                "coordinate": {
+                  "$ref": "#/components/schemas/Coordinates"
+                },
+                "distance": {
+                  "type": "number",
+                  "format": "float",
+                  "example": 100
+                },
+                "icon": {
+                  "type": "string",
+                  "example": "tram"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Station": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "8502996"
+          },
+          "name": {
+            "type": "string",
+            "example": "Aarau, Bahnhof"
+          },
+          "score": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "example": null
+          },
+          "coordinate": {
+            "$ref": "#/components/schemas/Coordinates"
+          },
+          "distance": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "example": null
+          }
+        }
+      },
+      "Service": {
+        "description": "Operation information for a connection.",
+        "type": "object",
+        "properties": {
+          "regular": {
+            "type": "string",
+            "example": "daily",
+            "nullable": true
+          },
+          "irregular": {
+            "type": "string",
+            "example": "not 23., 24. Jun 2012",
+            "nullable": true
+          }
+        }
+      },
+      "Prognosis": {
+        "description": "A prognosis contains \"realtime\" informations on the status of a connection checkpoint.",
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "string",
+            "nullable": true,
+            "description": "The predicted platform number or name at the checkpoint.",
+            "example": "8"
+          },
+          "arrival": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "The predicted arrival time at the checkpoint.",
+            "example": "2012-03-31T10:23:00+02:00"
+          },
+          "departure": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "The predicted departure time from the checkpoint.",
+            "example": "2012-03-31T08:59:00+02:00"
+          },
+          "capacity1st": {
+            "type": "string",
+            "nullable": true,
+            "description": "The predicted maximum estimated occupation load of 1st class coaches.",
+            "example": "1"
+          },
+          "capacity2nd": {
+            "type": "string",
+            "nullable": true,
+            "description": "The predicted maximum estimated occupation load of 2nd class coaches.",
+            "example": "2"
+          }
+        }
+      },
+      "Checkpoint": {
+        "description": "A checkpoint represents an arrival or a departure point (in time and space) of a connection.",
+        "type": "object",
+        "properties": {
+          "station": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "arrival": {
+            "type": "string",
+            "format": "time",
+            "nullable": true,
+            "description": "The arrival time to the checkpoint.",
+            "example": "14:58:00"
+          },
+          "departure": {
+            "type": "string",
+            "format": "time",
+            "nullable": true,
+            "description": "The departure time from the checkpoint.",
+            "example": null
+          },
+          "delay": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The delay at this checkpoint, can be null if no prognosis is available.",
+            "example": 2
+          },
+          "platform": {
+            "type": "string",
+            "nullable": true,
+            "description": "The arrival/departure platform",
+            "example": "8"
+          },
+          "prognosis": {
+            "$ref": "#/components/schemas/Prognosis"
+          }
+        }
+      },
+      "Stop": {
+        "type": "object",
+        "properties": {
+          "station": {
+            "$ref": "#/components/schemas/Station"
+          },
+          "arrival": {
+            "type": "string",
+            "example": null
+          },
+          "arrivalTimestamp": {
+            "type": "integer",
+            "exmple": 1676780040
+          },
+          "departure": {
+            "type": "string",
+            "example": "2023-02-18T15:30:00+01:00"
+          },
+          "departureTimestamp": {
+            "type": "integer",
+            "exmple": 1676780040
+          },
+          "platform": {
+            "type": "string",
+            "example": "4"
+          },
+          "prognosis": {
+            "type": "object",
+            "properties": {
+              "platform": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "arrival": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "departure": {
+                "type": "string",
+                "nullable": true,
+                "example": "2023-02-19T05:14:00+0100"
+              },
+              "capacity1st": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "capacity2nd": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              }
+            }
+          },
+          "delay": {
+            "type": "integer",
+            "example": 120
+          },
+          "realtimeAvailability": {
+            "type": "string",
+            "example": null
+          },
+          "location": {
+            "$ref": "#/components/schemas/Station"
+          }
+        }
+      },
+      "Journey": {
+        "description": "The actual transportation of a section, e.g. a bus or a train between two stations.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "The name of the transportation",
+            "example": "019351"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "description": "Category of the transportation.",
+            "example": "S"
+          },
+          "categoryCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "An internal category code of the transportation.",
+            "example": "1"
+          },
+          "number": {
+            "type": "string",
+            "nullable": true,
+            "description": "The number of the transportation line.",
+            "example": "13"
+          },
+          "operator": {
+            "type": "string",
+            "nullable": true,
+            "description": "The number of the transportation line.",
+            "example": "8"
+          },
+          "to": {
+            "type": "string",
+            "nullable": true,
+            "description": "Final destination of the train.",
+            "example": "Zürich HB"
+          },
+          "passList": {
+            "$ref": "#/components/schemas/Checkpoint"
+          },
+          "capacity1st": {
+            "type": "string",
+            "nullable": true,
+            "description": "The maximum estimated occupation load of 1st class coaches.",
+            "example": "1"
+          },
+          "capacity2nd": {
+            "type": "string",
+            "nullable": true,
+            "description": "The maximum estimated occupation load of 2nd class coaches.",
+            "example": "2"
+          }
+        }
+      },
+      "Section": {
+        "description": "A connection consists of one or multiple sections.",
+        "type": "object",
+        "properties": {
+          "journey": {
+            "$ref": "#/components/schemas/Journey"
+          },
+          "walk": {
+            "type": "string",
+            "nullable": true,
+            "description": "Information about walking distance, if available.",
+            "example": null
+          },
+          "departure": {
+            "$ref": "#/components/schemas/Checkpoint"
+          },
+          "arrival": {
+            "$ref": "#/components/schemas/Checkpoint"
+          }
+        }
+      },
+      "Connections": {
+        "description": "A connection represents a possible journey between two locations.",
+        "type": "object",
+        "properties": {
+          "from": {
+            "$ref": "#/components/schemas/Checkpoint"
+          },
+          "to": {
+            "$ref": "#/components/schemas/Checkpoint"
+          },
+          "duration": {
+            "description": "Duration of the journey.",
+            "type": "string",
+            "example": "00d00:43:00"
+          },
+          "service": {
+            "$ref": "#/components/schemas/Service"
+          },
+          "products": {
+            "description": "Array with transport products.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "IR",
+              "R9"
+            ]
+          },
+          "capacity1st": {
+            "descripion": "The maximum estimated occupation load of 1st class coaches.",
+            "type": "string",
+            "example": "1"
+          },
+          "capacity2nd": {
+            "descripion": "The maximum estimated occupation load of 2nd class coaches.",
+            "type": "string",
+            "example": "2"
+          },
+          "sections": {
+            "$ref": "#/components/schemas/Section"
+          }
+        }
+      },
+      "Stationboard": {
+        "type": "object",
+        "properties": {
+          "station": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The id of the station.",
+                "example": 8503059
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the station.",
+                "example": "Zurich Stadelhofen"
+              },
+              "score": {
+                "type": "number",
+                "format": "float",
+                "example": 0.5
+              },
+              "coordinate": {
+                "$ref": "#/components/schemas/Coordinates"
+              },
+              "distance": {
+                "type": "number",
+                "format": "float",
+                "example": 100
+              }
+            }
+          },
+          "stationboard": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "stop": {
+                  "$ref": "#/components/schemas/Stop"
+                },
+                "name": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": null
+                },
+                "category": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "IR"
+                },
+                "subcategory": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": null
+                },
+                "categoryCode": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": null
+                },
+                "number": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": null
+                },
+                "operator": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "SBB"
+                },
+                "to": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "Zürich Flughafen"
+                },
+                "passList": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Stop"
+                  }
+                },
+                "capacity1st": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "The maximum estimated occupation load of 1st class coaches.",
+                  "example": "1"
+                },
+                "capacity2nd": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "The maximum estimated occupation load of 2nd class coaches.",
+                  "example": "2"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
