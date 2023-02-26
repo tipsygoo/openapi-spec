@@ -14,8 +14,7 @@
   },
   "servers": [
     {
-      "url": "https://transport.opendata.ch/",
-      "description": "Production server"
+      "url": "http://transport.opendata.ch/v1"
     }
   ],
   "tags": [
@@ -36,8 +35,8 @@
           {
             "name": "query",
             "in": "query",
-            "description": "Specifies the location name to search for",
             "required": false,
+            "description": "Specifies the location name to search for",
             "schema": {
               "type": "string",
               "example": "Basel"
@@ -45,9 +44,9 @@
           },
           {
             "name": "x",
+            "required": false,
             "in": "query",
             "description": "Latitude",
-            "required": false,
             "schema": {
               "type": "number",
               "format": "double",
@@ -57,8 +56,8 @@
           {
             "name": "y",
             "in": "query",
-            "description": "Longitude",
             "required": false,
+            "description": "Longitude",
             "schema": {
               "type": "number",
               "format": "double",
@@ -68,7 +67,7 @@
           {
             "name": "type",
             "in": "query",
-            "description": "Only with query parameter. Specifies the location type.",
+            "description": "Only with query parameter. Specifies the location type.\n- all (default): Looks up for all types of locations\n- station: Looks up for stations (train station, bus station)\n- poi: Looks up for points of interest (Clock tower, China garden)\n- address: Looks up for an address (Zurich Bahnhofstrasse 33)",
             "required": false,
             "schema": {
               "type": "string",
@@ -80,6 +79,23 @@
               ],
               "default": "all"
             }
+          },
+          {
+            "name": "fields[]",
+            "in": "query",
+            "required": false,
+            "description": "Limit the response data. The API is aware of the hierarchy, if you set a field, everything below is in the response unless a more specific (further down in the hierarchy) field is set.",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": [
+              "stations/name",
+              "stations/coordinate"
+            ]
           }
         ],
         "responses": {
@@ -88,23 +104,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Location"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Stations"
                 }
               }
             }
           },
           "404": {
-            "description": "Internal Server Error",
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -146,15 +152,34 @@
           {
             "name": "via",
             "in": "query",
-            "description": "Specifies up to five via locations",
+            "required": false,
+            "description": "Specifies via location. When specifying several vias, array notation (via[]=via1&via[]=via2) is required.",
+            "example": "Bern",
             "schema": {
-              "type": "string",
-              "example": "Bern"
+              "type": "string"
             }
+          },
+          {
+            "name": "via[]",
+            "in": "query",
+            "required": false,
+            "description": "Specifies up to five via locations.",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": [
+              "Bern",
+              "Aarau"
+            ]
           },
           {
             "name": "date",
             "in": "query",
+            "required": false,
             "description": "Date of the connection, in the format YYYY-MM-DD",
             "schema": {
               "type": "string",
@@ -164,6 +189,7 @@
           {
             "name": "time",
             "in": "query",
+            "required": false,
             "description": "Time of the connection, in the format hh:mm",
             "schema": {
               "type": "string",
@@ -173,7 +199,8 @@
           {
             "name": "isArrivalTime",
             "in": "query",
-            "description": "If set to 1 the passed date and time is the arrival time",
+            "required": false,
+            "description": "If set to 1 the passed date and time is the arrival time.",
             "schema": {
               "type": "integer",
               "default": 0,
@@ -186,27 +213,41 @@
           {
             "name": "transportations",
             "in": "query",
-            "description": "Transportation means",
+            "required": false,
+            "description": "Transportation mean",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "train",
+                "tram",
+                "ship",
+                "bus",
+                "cableway"
+              ]
+            }
+          },
+          {
+            "name": "transportations[]",
+            "in": "query",
+            "required": false,
+            "description": "For more than one transportation mean, array notation (transportations[]=mean1&transportations[]=mean2) is required.",
+            "explode": true,
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "enum": [
-                  "train",
-                  "tram",
-                  "ship",
-                  "bus",
-                  "cableway"
-                ]
+                "type": "string"
               }
             },
-            "style": "form",
-            "explode": true
+            "example": [
+              "train",
+              "bus"
+            ]
           },
           {
             "name": "limit",
             "in": "query",
-            "description": "Specifies the number of connections to return",
+            "required": false,
+            "description": "1 - 16. Specifies the number of connections to return. If several connections depart at the same time they are counted as 1.",
             "schema": {
               "type": "integer",
               "example": 4
@@ -215,6 +256,7 @@
           {
             "name": "page",
             "in": "query",
+            "required": false,
             "description": "Allows pagination of connections",
             "schema": {
               "type": "integer",
@@ -224,6 +266,7 @@
           {
             "name": "direct",
             "in": "query",
+            "required": false,
             "description": "If set to 1 only direct connections are allowed",
             "schema": {
               "type": "integer",
@@ -237,10 +280,11 @@
           {
             "name": "sleeper",
             "in": "query",
+            "required": false,
             "description": "If set to 1 only night trains containing beds are allowed",
             "schema": {
               "type": "integer",
-              "default": 0,
+              "default": null,
               "enum": [
                 0,
                 1
@@ -250,6 +294,7 @@
           {
             "name": "couchette",
             "in": "query",
+            "required": false,
             "description": "If set to 1 only night trains containing couchettes are allowed",
             "schema": {
               "type": "integer",
@@ -263,6 +308,7 @@
           {
             "name": "bike",
             "in": "query",
+            "required": false,
             "description": "If set to 1 only trains allowing the transport of bicycles are allowed",
             "schema": {
               "type": "integer",
@@ -276,11 +322,34 @@
           {
             "name": "accessibility",
             "in": "query",
-            "description": "Possible values are independent_boarding, assisted_boarding, and advanced_notice",
+            "required": false,
+            "description": "Accessibility",
             "schema": {
               "type": "string",
+              "enum": [
+                "independent_boarding",
+                "assisted_boarding",
+                "advanced_notice"
+              ],
               "example": "independent_boarding"
             }
+          },
+          {
+            "name": "fields[]",
+            "in": "query",
+            "required": false,
+            "description": "Limit the response data. The API is aware of the hierarchy, if you set a field, everything below is in the response unless a more specific (further down in the hierarchy) field is set.",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": [
+              "connections/from/departure",
+              "connections/to/departure"
+            ]
           }
         ],
         "responses": {
@@ -289,23 +358,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Location"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Connections"
                 }
               }
             }
           },
           "404": {
-            "description": "Internal Server Error",
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
@@ -337,6 +396,7 @@
           {
             "name": "id",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "integer"
             },
@@ -346,6 +406,7 @@
           {
             "name": "limit",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "integer"
             },
@@ -355,21 +416,40 @@
           {
             "name": "transportations",
             "in": "query",
+            "required": false,
+            "description": "Transportation mean",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "train",
+                "tram",
+                "ship",
+                "bus",
+                "cableway"
+              ]
+            }
+          },
+          {
+            "name": "transportations[]",
+            "in": "query",
+            "required": false,
+            "description": "For more than one transportation mean, array notation (transportations[]=mean1&transportations[]=mean2) is required.",
+            "explode": true,
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
               }
             },
-            "description": "Transportation means; one or more of train, tram, ship, bus, cableway",
             "example": [
-              "tram",
+              "train",
               "bus"
             ]
           },
           {
             "name": "datetime",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             },
@@ -379,11 +459,34 @@
           {
             "name": "type",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
+            "required": false,
             "description": "departure (default) or arrival",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "departure",
+                "arrival"
+              ]
+            },
             "example": "departure"
+          },
+          {
+            "name": "fields[]",
+            "in": "query",
+            "required": false,
+            "description": "Limit the response data. The API is aware of the hierarchy, if you set a field, everything below is in the response unless a more specific (further down in the hierarchy) field is set.",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": [
+              "stationboard/to",
+              "stationboard/stop/departure",
+              "stationboard/stop/platform"
+            ]
           }
         ],
         "responses": {
@@ -397,18 +500,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
           "404": {
-            "description": "Internal Server Error",
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
@@ -424,6 +517,7 @@
   "components": {
     "schemas": {
       "Coordinates": {
+        "description": "Represents the type, latitude (x) and longitude (y) of a given station's coordinates.",
         "type": "object",
         "properties": {
           "type": {
@@ -442,7 +536,8 @@
           }
         }
       },
-      "Location": {
+      "Stations": {
+        "description": "List of stations objects.",
         "type": "object",
         "properties": {
           "stations": {
@@ -481,6 +576,7 @@
         }
       },
       "Station": {
+        "description": "Represents the properties for a given statino.",
         "type": "object",
         "properties": {
           "id": {
@@ -567,7 +663,7 @@
         "type": "object",
         "properties": {
           "station": {
-            "$ref": "#/components/schemas/Location"
+            "$ref": "#/components/schemas/Station"
           },
           "arrival": {
             "type": "string",
@@ -600,7 +696,8 @@
           }
         }
       },
-      "Stop": {
+      "Stops": {
+        "description": "Checkpoints the train passed on the journey.",
         "type": "object",
         "properties": {
           "station": {
@@ -792,6 +889,7 @@
         }
       },
       "Stationboard": {
+        "description": "The next connections leaving from a specific location.",
         "type": "object",
         "properties": {
           "station": {
@@ -828,7 +926,7 @@
               "type": "object",
               "properties": {
                 "stop": {
-                  "$ref": "#/components/schemas/Stop"
+                  "$ref": "#/components/schemas/Stops"
                 },
                 "name": {
                   "type": "string",
@@ -868,7 +966,7 @@
                 "passList": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Stop"
+                    "$ref": "#/components/schemas/Stops"
                   }
                 },
                 "capacity1st": {
@@ -891,11 +989,15 @@
       "Error": {
         "type": "object",
         "properties": {
-          "error": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "No route found for \"GET /v1/{route}\""
+                }
               }
             }
           }
