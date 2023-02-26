@@ -13,8 +13,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: 1.0.0
 servers:
-  - url: https://transport.opendata.ch/
-    description: Production server
+  - url: http://transport.opendata.ch/v1
 tags:
   - name: resources
 paths:
@@ -28,50 +27,59 @@ paths:
       parameters:
         - name: query
           in: query
-          description: Specifies the location name to search for
           required: false
+          description: Specifies the location name to search for
           schema:
             type: string
             example: Basel
         - name: x
+          required: false
           in: query
           description: Latitude
-          required: false
           schema:
             type: number
             format: double
             example: 47.476001
         - name: y
           in: query
-          description: Longitude
           required: false
+          description: Longitude
           schema:
             type: number
             format: double
             example: 8.306130
         - name: type
           in: query
-          description: Only with query parameter. Specifies the location type.
+          description: |- 
+            Only with query parameter. Specifies the location type.
+            - all (default): Looks up for all types of locations
+            - station: Looks up for stations (train station, bus station)
+            - poi: Looks up for points of interest (Clock tower, China garden)
+            - address: Looks up for an address (Zurich Bahnhofstrasse 33)
           required: false
           schema:
             type: string
             enum: [all, station, poi, address]
             default: all
+        - name: fields[]
+          in: query
+          required: false
+          description: Limit the response data. The API is aware of the hierarchy, if you set a field, everything below is in the response unless a more specific (further down in the hierarchy) field is set. 
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          example: ["stations/name", "stations/coordinate"]
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Location'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Stations'
         '404':
-          description: Internal Server Error
+          description: Not found
           content:
             application/json:
               schema:
@@ -98,25 +106,39 @@ paths:
             example: Genève
         - name: via
           in: query
-          description: Specifies up to five via locations
+          required: false
+          description: Specifies via location. When specifying several vias, array notation (via[]=via1&via[]=via2) is required.
+          example: Bern
           schema:
             type: string
-            example: Bern
+        - name: via[]
+          in: query
+          required: false
+          description: Specifies up to five via locations.
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          example: ["Bern", "Aarau"]
         - name: date
           in: query
+          required: false
           description: Date of the connection, in the format YYYY-MM-DD
           schema:
             type: string
             example: "2012-03-25"
         - name: time
           in: query
+          required: false
           description: Time of the connection, in the format hh:mm
           schema:
             type: string
             example: "17:30"
         - name: isArrivalTime
           in: query
-          description: If set to 1 the passed date and time is the arrival time
+          required: false
+          description: If set to 1 the passed date and time is the arrival time.
           schema:
             type: integer
             default: 0
@@ -125,33 +147,43 @@ paths:
               - 1
         - name: transportations
           in: query
-          description: Transportation means
+          required: false
+          description: Transportation mean
+          schema:
+            type: string
+            enum:
+              - train
+              - tram
+              - ship
+              - bus
+              - cableway
+        - name: transportations[]
+          in: query
+          required: false
+          description: For more than one transportation mean, array notation (transportations[]=mean1&transportations[]=mean2) is required.
+          explode: true
           schema:
             type: array
             items:
               type: string
-              enum:
-                - train
-                - tram
-                - ship
-                - bus
-                - cableway
-          style: form
-          explode: true
+          example: ["train", "bus"]
         - name: limit
           in: query
-          description: Specifies the number of connections to return
+          required: false
+          description: 1 - 16. Specifies the number of connections to return. If several connections depart at the same time they are counted as 1.
           schema:
             type: integer
             example: 4
         - name: page
           in: query
+          required: false
           description: Allows pagination of connections
           schema:
             type: integer
             example: 3
         - name: direct
           in: query
+          required: false
           description: If set to 1 only direct connections are allowed
           schema:
             type: integer
@@ -161,15 +193,17 @@ paths:
               - 1
         - name: sleeper
           in: query
+          required: false
           description: If set to 1 only night trains containing beds are allowed
           schema:
             type: integer
-            default: 0
+            default: null
             enum:
               - 0
               - 1
         - name: couchette
           in: query
+          required: false
           description: If set to 1 only night trains containing couchettes are allowed
           schema:
             type: integer
@@ -179,6 +213,7 @@ paths:
               - 1
         - name: bike
           in: query
+          required: false
           description: If set to 1 only trains allowing the transport of bicycles are allowed
           schema:
             type: integer
@@ -188,25 +223,34 @@ paths:
               - 1
         - name: accessibility
           in: query
-          description: Possible values are independent_boarding, assisted_boarding, and advanced_notice
+          required: false
+          description: Accessibility
           schema:
             type: string
+            enum:
+              - independent_boarding
+              - assisted_boarding
+              - advanced_notice
             example: independent_boarding
+        - name: fields[]
+          in: query
+          required: false
+          description: Limit the response data. The API is aware of the hierarchy, if you set a field, everything below is in the response unless a more specific (further down in the hierarchy) field is set. 
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          example: ["connections/from/departure", "connections/to/departure"]
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Location'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Connections'
         '404':
-          description: Internal Server Error
+          description: Not Found
           content:
             application/json:
               schema:
@@ -226,36 +270,67 @@ paths:
           example: Aarau
         - name: id
           in: query
+          required: false
           schema:
             type: integer
           description: The id of the station whose stationboard should be returned. Alternative to the station parameter; one of these two is required. If both an id and a station are specified the id has precedence.
           example: 8503059
         - name: limit
           in: query
+          required: false
           schema:
             type: integer
           description: Number of departing connections to return. This is not a hard limit - if multiple connections leave at the same time it'll return any connections that leave at the same time as the last connection within the limit.
           example: 15
         - name: transportations
           in: query
+          required: false
+          description: Transportation mean
+          schema:
+            type: string
+            enum:
+              - train
+              - tram
+              - ship
+              - bus
+              - cableway
+        - name: transportations[]
+          in: query
+          required: false
+          description: For more than one transportation mean, array notation (transportations[]=mean1&transportations[]=mean2) is required.
+          explode: true
           schema:
             type: array
             items:
               type: string
-          description: Transportation means; one or more of train, tram, ship, bus, cableway
-          example: ["tram", "bus"]
+          example: ["train", "bus"]
         - name: datetime
           in: query
+          required: false
           schema:
             type: string
           description: Date and time of departing connections, in the format YYYY-MM-DD hh:mm.
           example: 2012-03-25 17:30
         - name: type
           in: query
+          required: false
+          description: departure (default) or arrival
           schema:
             type: string
-          description: departure (default) or arrival
+            enum:
+              - departure
+              - arrival
           example: departure
+        - name: fields[]
+          in: query
+          required: false
+          description: Limit the response data. The API is aware of the hierarchy, if you set a field, everything below is in the response unless a more specific (further down in the hierarchy) field is set. 
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          example: ["stationboard/to", "stationboard/stop/departure", "stationboard/stop/platform"]
       responses:
         '200':
           description: Ok
@@ -263,14 +338,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Stationboard'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         '404':
-          description: Internal Server Error
+          description: Not Found
           content:
             application/json:
               schema:
@@ -278,6 +347,7 @@ paths:
 components:
   schemas:
     Coordinates:
+      description: Represents the type, latitude (x) and longitude (y) of a given station's coordinates.
       type: object
       properties:
         type:
@@ -291,7 +361,8 @@ components:
           type: number
           format: double
           example: 7.589547
-    Location:
+    Stations:
+      description: List of stations objects.
       type: object
       properties:
         stations:
@@ -319,6 +390,7 @@ components:
                 type: string
                 example: "tram"
     Station:
+      description: Represents the properties for a given statino.
       type: object
       properties:
         id:
@@ -387,7 +459,7 @@ components:
       type: object
       properties:
         station:
-          $ref: '#/components/schemas/Location'
+          $ref: '#/components/schemas/Station'
         arrival:
           type: string
           format: time
@@ -412,7 +484,8 @@ components:
           example: "8"
         prognosis:
           $ref: '#/components/schemas/Prognosis'
-    Stop:
+    Stops:
+      description: Checkpoints the train passed on the journey.
       type: object
       properties:
         station:
@@ -555,6 +628,7 @@ components:
         sections:
           $ref: '#/components/schemas/Section'
     Stationboard:
+      description: The next connections leaving from a specific location.
       type: object
       properties:
         station:
@@ -584,7 +658,7 @@ components:
             type: object
             properties:
               stop:
-                $ref: '#/components/schemas/Stop'
+                $ref: '#/components/schemas/Stops'
               name:
                 type: string
                 nullable: true
@@ -616,7 +690,7 @@ components:
               passList:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Stop'
+                  $ref: '#/components/schemas/Stops'
               capacity1st:
                 type: string
                 nullable: true
@@ -630,8 +704,11 @@ components:
     Error:
         type: object
         properties:
-          error:
-            type: object
-            properties:
-              message:
-                type: string
+          errors:
+            type: array
+            items:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: No route found for "GET /v1/{route}"
