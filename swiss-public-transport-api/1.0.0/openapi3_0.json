@@ -44,8 +44,8 @@
           },
           {
             "name": "x",
-            "required": false,
             "in": "query",
+            "required": false,
             "description": "Latitude",
             "schema": {
               "type": "number",
@@ -67,8 +67,8 @@
           {
             "name": "type",
             "in": "query",
-            "description": "Only with query parameter. Specifies the location type.\n- all (default): Looks up for all types of locations\n- station: Looks up for stations (train station, bus station)\n- poi: Looks up for points of interest (Clock tower, China garden)\n- address: Looks up for an address (Zurich Bahnhofstrasse 33)",
             "required": false,
+            "description": "Only with query parameter. Specifies the location type.\n- all (default): Looks up for all types of locations\n- station: Looks up for stations (train station, bus station)\n- poi: Looks up for points of interest (Clock tower, China garden)\n- address: Looks up for an address (Zurich Bahnhofstrasse 33)",
             "schema": {
               "type": "string",
               "enum": [
