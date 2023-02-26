@@ -50,13 +50,13 @@ paths:
             example: 8.306130
         - name: type
           in: query
+          required: false
           description: |- 
             Only with query parameter. Specifies the location type.
             - all (default): Looks up for all types of locations
             - station: Looks up for stations (train station, bus station)
             - poi: Looks up for points of interest (Clock tower, China garden)
             - address: Looks up for an address (Zurich Bahnhofstrasse 33)
-          required: false
           schema:
             type: string
             enum: [all, station, poi, address]
