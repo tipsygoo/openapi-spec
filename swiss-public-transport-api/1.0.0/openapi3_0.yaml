@@ -90,6 +90,8 @@ paths:
       tags:
         - resources
       summary: Returns the next connections from a location to another.
+      description: Returns the next connections from a location to another.
+      operationId: getConnections
       parameters:
         - name: from
           in: query
@@ -261,6 +263,8 @@ paths:
       tags:
         - resources
       summary: Returns the next connections leaving from a specific location.
+      description: Returns the next connections leaving from a specific location.
+      operationId: getStationboard
       parameters:
         - name: station
           in: query
