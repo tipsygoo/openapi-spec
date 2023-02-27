@@ -131,6 +131,8 @@
           "resources"
         ],
         "summary": "Returns the next connections from a location to another.",
+        "description": "Returns the next connections from a location to another.",
+        "operationId": "getConnections",
         "parameters": [
           {
             "name": "from",
@@ -287,7 +289,7 @@
             "description": "If set to 1 only night trains containing beds are allowed",
             "schema": {
               "type": "integer",
-              "default": null,
+              "default": 0,
               "enum": [
                 0,
                 1
@@ -385,6 +387,8 @@
           "resources"
         ],
         "summary": "Returns the next connections leaving from a specific location.",
+        "description": "Returns the next connections leaving from a specific location.",
+        "operationId": "getStationboard",
         "parameters": [
           {
             "name": "station",
