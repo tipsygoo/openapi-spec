@@ -40,7 +40,6 @@
         ],
         "summary": "Get Carbon Intensity data for current half hour.",
         "description": "Retrieves Carbon Intensity data for the current half hour. All times provided in UTC (+00:00).",
-        "operationId": "getIntensityData",
         "responses": {
           "200": {
             "description": "OK",
@@ -82,7 +81,6 @@
         ],
         "summary": "Get Carbon Intensity data for today.",
         "description": "Get Carbon Intensity data for today. All times provided in UTC (+00:00).",
-        "operationId": "getIntensityForToday",
         "responses": {
           "200": {
             "description": "200 response",
@@ -124,16 +122,15 @@
         ],
         "summary": "Get Carbon Intensity data for a specific date.",
         "description": "Get Carbon Intensity data for a specific date. All times provided in UTC (+00:00).",
-        "operationId": "getIntensityByDate",
         "parameters": [
           {
             "name": "date",
             "in": "path",
-            "description": "Date in YYYY-MM-DD format e.g. 2017-08-25",
+            "description": "Date in YYYY-MM-DD format.",
             "required": true,
             "schema": {
               "type": "string",
-              "format": "date"
+              "example": "2023-01-25"
             }
           }
         ],
@@ -178,24 +175,25 @@
         ],
         "summary": "Get Carbon Intensity data for specific date and period.",
         "description": "Get Carbon Intensity data for a specific date and half hour settlement period. All times provided in UTC (+00:00).",
-        "operationId": "getIntensityByDateAndHalfHourPeriod",
         "parameters": [
           {
             "name": "date",
             "in": "path",
             "required": true,
-            "description": "Date in YYYY-MM-DD format e.g. 2017-08-25",
+            "description": "Date in YYYY-MM-DD format.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-25"
             }
           },
           {
             "name": "period",
             "in": "path",
             "required": true,
-            "description": "Half hour settlement period between 1-48 e.g. 42",
+            "description": "Half hour settlement period between 1-48.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": 42
             }
           }
         ],
@@ -240,7 +238,6 @@
         ],
         "summary": "Get Carbon Intensity factors for each fuel type.",
         "description": "Get Carbon Intensity factors for each fuel type.",
-        "operationId": "getIntensityByFuelType",
         "responses": {
           "200": {
             "description": "200 response",
@@ -282,15 +279,15 @@
         ],
         "summary": "Get Carbon Intensity data for specific half hour period.",
         "description": "Returns carbon intensity data for a specific half hour period. All times provided in UTC (+00:00).",
-        "operationId": "getIntensityForHalfHourPeriod",
         "parameters": [
           {
             "name": "from",
             "in": "path",
             "required": true,
-            "description": "Datetime in ISO8601 format YYYY-MM-DDThh:mmZ e.g. 2017-08-25T12:35Z",
+            "description": "Datetime in ISO8601 format YYYY-MM-DDThh:mmZ.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-25T12:35Z"
             }
           }
         ],
@@ -335,15 +332,15 @@
         ],
         "summary": "Get Carbon Intensity data 24hrs forwards from specific datetime.",
         "description": "Get Carbon Intensity data between the {from} datetime specified and 24hrs before. All times provided in UTC (+00:00).",
-        "operationId": "getIntensity24hrsForward",
         "parameters": [
           {
             "name": "from",
             "in": "path",
-            "description": "Start datetime in ISO8601 format YYYY-MM-DDThh:mmZ e.g. 2017-08-25T12:35Z",
+            "description": "Start datetime in ISO8601 format YYYY-MM-DDThh:mmZ.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-25T12:35Z"
             }
           }
         ],
@@ -388,15 +385,15 @@
         ],
         "summary": "Get Carbon Intensity data 48hrs forwards from specific datetime.",
         "description": "Get Carbon Intensity data between the {from} datetime specified and 48hrs after. All times provided in UTC (+00:00).",
-        "operationId": "getIntensity48hrsForward",
         "parameters": [
           {
             "name": "from",
             "in": "path",
-            "description": "Start datetime in ISO8601 format YYYY-MM-DDThh:mmZ e.g. 2017-08-25T12:35Z",
+            "description": "Start datetime in ISO8601 format YYYY-MM-DDThh:mmZ.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-25T12:35Z"
             }
           }
         ],
@@ -441,15 +438,15 @@
         ],
         "summary": "Get Carbon Intensity data 24hrs in the past of a specific datetime.",
         "description": "Get Carbon Intensity data between the {from} datetime specified and 24hrs before. All times provided in UTC (+00:00).",
-        "operationId": "getIntensity24hrsBefore",
         "parameters": [
           {
             "name": "from",
             "in": "path",
-            "description": "Start datetime in ISO8601 format YYYY-MM-DDThh:mmZ e.g. 2017-08-25T12:35Z",
+            "description": "Start datetime in ISO8601 format YYYY-MM-DDThh:mmZ.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-25T12:35Z"
             }
           }
         ],
@@ -494,24 +491,25 @@
         ],
         "summary": "Get Carbon Intensity data between from and to datetime",
         "description": "Get Carbon Intensity data between the {from} and {to} datetimes. The maximum date range is limited to 14 days. All times provided in UTC (+00:00).",
-        "operationId": "getIntensityBetweenDates",
         "parameters": [
           {
             "name": "from",
             "in": "path",
-            "description": "Start datetime in in ISO8601 format YYYY-MM-DDThh:mmZ e.g. 2017-08-25T12:35Z",
+            "description": "Start datetime in in ISO8601 format YYYY-MM-DDThh:mmZ",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-25T12:35Z"
             }
           },
           {
             "name": "to",
             "in": "path",
-            "description": "End datetime in in ISO8601 format YYYY-MM-DDThh:mmZ e.g. 2017-08-25T12:35Z",
+            "description": "End datetime in in ISO8601 format YYYY-MM-DDThh:mmZ",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-26T12:35Z"
             }
           }
         ],
@@ -556,24 +554,25 @@
         ],
         "summary": "Get Carbon Intensity statistics",
         "description": "Get Carbon Intensity statistics (average, max, mean) between from and to datetime. The maximum date range is limited to 30 days. All times provided in UTC (+00:00).",
-        "operationId": "getIntensityStatsBetweenDates",
         "parameters": [
           {
             "name": "from",
             "in": "path",
             "required": true,
-            "description": "Start datetime in ISO8601 format YYYY-MM-DDThh:mmZ e.g. 2017-08-25T12:35Z",
+            "description": "Start datetime in ISO8601 format YYYY-MM-DDThh:mmZ.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-25T12:35Z"
             }
           },
           {
             "name": "to",
             "in": "path",
             "required": true,
-            "description": "End datetime in ISO8601 format YYYY-MM-DDThh:mmZ e.g. 2017-08-26T17:00Z",
+            "description": "End datetime in ISO8601 format YYYY-MM-DDThh:mmZ.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-26T12:35Z"
             }
           }
         ],
@@ -618,7 +617,6 @@
         ],
         "summary": "Get block average Carbon Intensity statistics",
         "description": "Get block average Carbon Intensity statistics (average, max, mean) between from and to datetime. The maximum date range is limited to 30 days. The block length must be between 1 and 24 hours and should be an integer. All times provided in UTC (+00:00).",
-        "operationId": "getIntensityStatsBlockAverage",
         "parameters": [
           {
             "name": "from",
@@ -626,7 +624,8 @@
             "required": true,
             "description": "Start datetime in in ISO8601 format YYYY-MM-DDThh:mmZ",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-25T12:35Z"
             }
           },
           {
@@ -635,7 +634,8 @@
             "required": true,
             "description": "End datetime in in ISO8601 format YYYY-MM-DDThh:mmZ",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2023-01-26T12:35Z"
             }
           },
           {
@@ -644,7 +644,8 @@
             "required": true,
             "description": "Block length in hours i.e. a block length of 2 hrs over a 24 hr period returns 12 items with the average, max, min for each 2 hr block e.g. 2017-08-26T17:00Z/2017-08-27T17:00Z/2",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "2017-08-26T17:00Z/2017-08-27T17:00Z/2"
             }
           }
         ],
