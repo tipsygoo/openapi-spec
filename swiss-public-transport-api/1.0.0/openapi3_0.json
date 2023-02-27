@@ -709,7 +709,7 @@
           },
           "arrivalTimestamp": {
             "type": "integer",
-            "exmple": 1676780040
+            "example": 1676780040
           },
           "departure": {
             "type": "string",
@@ -717,7 +717,7 @@
           },
           "departureTimestamp": {
             "type": "integer",
-            "exmple": 1676780040
+            "example": 1676780040
           },
           "platform": {
             "type": "string",
@@ -874,12 +874,12 @@
             ]
           },
           "capacity1st": {
-            "descripion": "The maximum estimated occupation load of 1st class coaches.",
+            "description": "The maximum estimated occupation load of 1st class coaches.",
             "type": "string",
             "example": "1"
           },
           "capacity2nd": {
-            "descripion": "The maximum estimated occupation load of 2nd class coaches.",
+            "description": "The maximum estimated occupation load of 2nd class coaches.",
             "type": "string",
             "example": "2"
           },
