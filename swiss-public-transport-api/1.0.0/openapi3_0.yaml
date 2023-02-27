@@ -198,7 +198,7 @@ paths:
           description: If set to 1 only night trains containing beds are allowed
           schema:
             type: integer
-            default: null
+            default: 0
             enum:
               - 0
               - 1
@@ -496,13 +496,13 @@ components:
           example: null
         arrivalTimestamp:
           type: integer
-          exmple: 1676780040
+          example: 1676780040
         departure:
           type: string
           example: "2023-02-18T15:30:00+01:00"
         departureTimestamp:
           type: integer
-          exmple: 1676780040
+          example: 1676780040
         platform:
           type: string
           example: "4"
@@ -619,11 +619,11 @@ components:
             type: string
           example: ["IR", "R9"]
         capacity1st:
-          descripion: The maximum estimated occupation load of 1st class coaches.
+          description: The maximum estimated occupation load of 1st class coaches.
           type: string
           example: "1"
         capacity2nd:
-          descripion: The maximum estimated occupation load of 2nd class coaches.
+          description: The maximum estimated occupation load of 2nd class coaches.
           type: string
           example: "2"
         sections:
