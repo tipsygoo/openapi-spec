@@ -19,7 +19,7 @@
   },
   "servers": [
     {
-      "url": "https://api.carbonintensity.org.uk/"
+      "url": "https://api.carbonintensity.org.uk"
     }
   ],
   "tags": [
