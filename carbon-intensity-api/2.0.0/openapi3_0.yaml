@@ -14,7 +14,7 @@ externalDocs:
   description: Find out more about Carbon Intensity API
   url: https://carbonintensity.org.uk/
 servers:
-  - url: https://api.carbonintensity.org.uk/
+  - url: https://api.carbonintensity.org.uk
 tags:
   - name: intensity
     description: Carbon Intensity - National
