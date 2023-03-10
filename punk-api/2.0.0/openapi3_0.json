@@ -1,0 +1,572 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Punk API",
+    "description": "Have you ever wanted to search through Brewdog's expansive back catalogue of beer in a programmatic way? Maybe build a tool that pairs beer with food, or search beers with an abv of more than 4%? Well now your prayers have been answered!\n\nThe Punk API takes Brewdog's DIY Dog and turns it into a searchable, filterable API that's completely free and open source.",
+    "license": {
+      "name": "MIT License",
+      "url": "https://raw.githubusercontent.com/sammdec/punkapi/master/LICENSE"
+    },
+    "version": "2.0.0"
+  },
+  "externalDocs": {
+    "description": "Find out more about Punk API",
+    "url": "https://punkapi.com"
+  },
+  "servers": [
+    {
+      "url": "https://api.punkapi.com/v2"
+    }
+  ],
+  "tags": [
+    {
+      "name": "beers",
+      "description": "Catalogue of beer"
+    }
+  ],
+  "paths": {
+    "/beers": {
+      "get": {
+        "tags": [
+          "beers"
+        ],
+        "summary": "Return the beers in ascending order.",
+        "description": "Without any params the API will just return the beers in ascending order from their ID. Parameters are passed in as a query string and can be chained together.",
+        "operationId": "list_beers",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Requests that return multiple items will be limited to 25 results by default. You can access other pages using this  paramater.",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Increase the amount of beers returned in each request.",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 80
+            }
+          },
+          {
+            "name": "abv_gt",
+            "in": "query",
+            "description": "Returns all beers with ABV greater than the supplied number.",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 4.5
+            }
+          },
+          {
+            "name": "abv_lt",
+            "in": "query",
+            "description": "Returns all beers with ABV less than the supplied number.",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 4.5
+            }
+          },
+          {
+            "name": "ibu_gt",
+            "in": "query",
+            "description": "Returns all beers with IBU greater than the supplied number.",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 60
+            }
+          },
+          {
+            "name": "ibu_lt",
+            "in": "query",
+            "description": "Returns all beers with IBU less than the supplied number.",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 60
+            }
+          },
+          {
+            "name": "ebc_gt",
+            "in": "query",
+            "description": "Returns all beers with EBC greater than the supplied number.",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 20
+            }
+          },
+          {
+            "name": "ebc_lt",
+            "in": "query",
+            "description": "Returns all beers with EBC less than the supplied number.",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 20
+            }
+          },
+          {
+            "name": "beer_name",
+            "in": "query",
+            "description": "Returns all beers matching the supplied name (this will match partial strings as well so e.g punk will return Punk IPA), if you need to add spaces just add an underscore (_).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "punk"
+            }
+          },
+          {
+            "name": "yeast",
+            "in": "query",
+            "description": "Returns all beers matching the supplied yeast name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "american_ale"
+            }
+          },
+          {
+            "name": "brewed_before",
+            "in": "query",
+            "description": "Returns all beers brewed before this date, the date format is mm-yyyy.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "10-2011"
+            }
+          },
+          {
+            "name": "brewed_after",
+            "in": "query",
+            "description": "Returns all beers brewed after this date, the date format is mm-yyyy.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "10-2011"
+            }
+          },
+          {
+            "name": "hops",
+            "in": "query",
+            "description": "Returns all beers matching the supplied hops name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Fuggles"
+            }
+          },
+          {
+            "name": "malt",
+            "in": "query",
+            "description": "Returns all beers matching the supplied malt name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "maris_otter_extra_pale"
+            }
+          },
+          {
+            "name": "food",
+            "in": "query",
+            "description": "Returns all beers matching the supplied food string, this performs a fuzzy match, if you need to add spaces just add an underscore (_).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "spicy_chicken"
+            }
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "Returns all beers matching the supplied ID's. You can pass in multiple ID's by separating them with a | symbol.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "1|2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Beer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/beers/{beerId}": {
+      "get": {
+        "tags": [
+          "beers"
+        ],
+        "summary": "Return the beers in ascending order.",
+        "description": "Without any params the API will just return the beers in ascending order from their ID. Parameters are passed in as a query string and can be chained together.",
+        "operationId": "get_beer",
+        "parameters": [
+          {
+            "name": "beerId",
+            "in": "path",
+            "description": "Gets a beer from the api using the beers id.",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Beer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/beers/random": {
+      "get": {
+        "tags": [
+          "beers"
+        ],
+        "summary": "Return the beers in ascending order.",
+        "description": "Without any params the API will just return the beers in ascending order from their ID. Parameters are passed in as a query string and can be chained together.",
+        "operationId": "random_beer",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Beer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Beer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Buzz"
+          },
+          "tagline": {
+            "type": "string",
+            "example": "A Real Bitter Experience."
+          },
+          "first_brewed": {
+            "type": "string",
+            "example": "09/2007"
+          },
+          "description": {
+            "type": "string",
+            "example": "A light, crisp and bitter IPA brewed with English and American hops. A small batch brewed only once."
+          },
+          "image_url": {
+            "type": "string",
+            "example": "https://images.punkapi.com/v2/keg.png"
+          },
+          "avb": {
+            "type": "number",
+            "example": 4.5
+          },
+          "ibu": {
+            "type": "number",
+            "example": 60
+          },
+          "target_fg": {
+            "type": "number",
+            "example": 1010
+          },
+          "target_og": {
+            "type": "number",
+            "example": 1044
+          },
+          "ebc": {
+            "type": "number",
+            "example": 20
+          },
+          "srm": {
+            "type": "number",
+            "example": 10
+          },
+          "ph": {
+            "type": "number",
+            "example": 4.4
+          },
+          "attenuation_level": {
+            "type": "number",
+            "example": 75
+          },
+          "volume": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number",
+                "example": 20
+              },
+              "unit": {
+                "type": "string",
+                "example": "litres"
+              }
+            }
+          },
+          "boil_volume": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number",
+                "example": 25
+              },
+              "unit": {
+                "type": "string",
+                "example": "litres"
+              }
+            }
+          },
+          "method": {
+            "type": "object",
+            "properties": {
+              "mash_temp": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "temp": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "example": 64
+                        },
+                        "unit": {
+                          "type": "string",
+                          "example": "celsius"
+                        }
+                      }
+                    },
+                    "duration": {
+                      "type": "number",
+                      "example": 75
+                    }
+                  }
+                }
+              },
+              "fermentation": {
+                "type": "object",
+                "properties": {
+                  "temp": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "number",
+                        "example": 19
+                      },
+                      "unit": {
+                        "type": "string",
+                        "example": "celsius"
+                      }
+                    }
+                  }
+                }
+              },
+              "twist": {
+                "type": "string",
+                "example": null,
+                "nullable": true
+              }
+            }
+          },
+          "ingredients": {
+            "type": "object",
+            "properties": {
+              "malt": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Maris Otter Extra Pale"
+                    },
+                    "amount": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "example": 3.3
+                        },
+                        "unit": {
+                          "type": "string",
+                          "example": "kilograms"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "hops": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Fuggles"
+                    },
+                    "amount": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "example": 25
+                        },
+                        "unit": {
+                          "type": "string",
+                          "example": "grams"
+                        }
+                      }
+                    },
+                    "add": {
+                      "type": "string",
+                      "example": "start"
+                    },
+                    "attribute": {
+                      "type": "string",
+                      "example": "bitter"
+                    }
+                  }
+                }
+              },
+              "yeast": {
+                "type": "string",
+                "example": "Wyeast 1056 - American Ale"
+              }
+            }
+          },
+          "food_pairing": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": [
+                "Spicy chicken tikka masala",
+                "Grilled chicken quesadilla",
+                "Caramel toffee cake"
+              ]
+            }
+          },
+          "brewers_tips": {
+            "type": "string",
+            "example": "The earthy and floral aromas from the hops can be overpowering. Drop a little Cascade in at the end of the boil to lift the profile with a bit of citrus."
+          },
+          "contributed_by": {
+            "type": "string",
+            "example": "Sam Mason <samjbmason>"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "error": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid query params"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "example": "params"
+                },
+                "param": {
+                  "type": "string",
+                  "example": "beerId"
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "beerId must be a number and greater than 0"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "page"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
