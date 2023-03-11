@@ -161,7 +161,7 @@ paths:
       description: Without any params the API will just return the beers in ascending order from their ID. Parameters are passed in as a query string and can be chained together.
       operationId: get_beer
       parameters:
-        - name: beerId
+        - name: id
           in: path
           description: Gets a beer from the api using the beers id.
           required: true
