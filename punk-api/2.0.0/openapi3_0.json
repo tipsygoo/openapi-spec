@@ -221,7 +221,7 @@
         }
       }
     },
-    "/beers/{beerId}": {
+    "/beers/{id}": {
       "get": {
         "tags": [
           "beers"
@@ -231,7 +231,7 @@
         "operationId": "get_beer",
         "parameters": [
           {
-            "name": "beerId",
+            "name": "id",
             "in": "path",
             "description": "Gets a beer from the api using the beers id.",
             "required": true,
