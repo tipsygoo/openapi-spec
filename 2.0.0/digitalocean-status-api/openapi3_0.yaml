@@ -1,0 +1,501 @@
+openapi: 3.0.0
+info:
+  title: DigitalOcean Status
+  description: |-
+    The following documentation is provided to let users of the DigitalOcean status page programmatically access various elements on the page.
+
+  version: 2.0.0
+externalDocs:
+  description: Find out more about DigitalOcean Status API
+  url: https://status.digitalocean.com/api
+servers:
+  - url:  https://status.digitalocean.com/api/v2
+tags:
+  - name: summary
+    description: Summary of the status page.
+  - name: status
+    description: Status rollup for the whole page.
+  - name: components
+    description: Components for the page.
+  - name: incidents
+    description: Incidents are the cornerstone of any status page, being composed of many incident updates.
+  - name: maintenances
+    description: Scheduled maintenances.
+
+paths:
+  /summary.json:
+    get:
+      tags:
+        - summary
+      summary: Get a summary of the status page.
+      description: |- 
+        Get a summary of the status page, including a status indicator, component statuses, unresolved incidents, and any upcoming or in-progress scheduled maintenances. 
+      operationId: summary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Summary'
+  /status.json:
+    get:
+      tags:
+        - status
+      summary: Get the status rollup for the whole page.
+      description: This endpoint includes an indicator - one of none, minor, major, or critical, as well as a human description of the blended component status. Examples of the blended status include "All Systems Operational", "Partial System Outage", and "Major Service Outage". 
+      operationId: status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+  /components.json:
+    get:
+      tags:
+        - components
+      summary: Get the components for the page.
+      description: Each component is listed along with its status - one of operational, degraded_performance, partial_outage, or major_outage. 
+      operationId: components
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Components'
+  /incidents.json:
+    get:
+      tags:
+        - incidents
+      summary: Get a list of the 50 most recent incidents.
+      description: |-
+        This includes all unresolved incidents, as well as those in the Resolved and Postmortem state.
+
+        Each incident usually goes through a progression of statuses, with an impact calculated from a blend of component statuses (or an optional override).
+
+        **Status**: Investigating, Identified, Monitoring, Resolved, or Postmortem.
+
+        **Impact**: None (black), Minor (yellow), Major (orange), or Critical (red).
+
+      operationId: incidents
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incidents'
+  /incidents/unresolved.json:
+    get:
+      tags:
+        - incidents
+      summary: Get a list of any unresolved incidents.
+      description: This endpoint will only return incidents in the Investigating, Identified, or Monitoring state. 
+      operationId: unresolved_incidents
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incidents'
+  /scheduled-maintenances.json:
+    get:
+      tags:
+        - maintenances
+      summary: Get a list of the 50 most recent scheduled maintenances.
+      description: |- 
+        This includes scheduled maintenances, as well as those in the Completed state.
+
+        Scheduled maintenances are planned outages, upgrades, or general notices that you're working on infrastructure and disruptions may occurr. A close sibling of Incidents, each usually goes through a progression of statuses listed below, with an impact calculated from a blend of component statuses (or an optional override).
+
+        **Status**: Scheduled, In Progress, Verifying, or Completed
+
+        **Impact**: None (black), Minor (yellow), Major (orange), or Critical (red) 
+
+      operationId: maintenances
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenances'
+  /scheduled-maintenances/active.json:
+    get:
+      tags:
+        - maintenances
+      summary: Get a list of any active maintenances.
+      description: This endpoint will only return scheduled maintenances in the In Progress or Verifying state.
+      operationId: active_maintenances
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenances'
+  /scheduled-maintenances/upcoming.json:
+    get:
+      tags:
+        - maintenances
+      summary: Get a list of any upcoming maintenances.
+      description: This endpoint will only return scheduled maintenances still in the Scheduled state.
+      operationId: upcoming_maintenances
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenances'
+components:
+  schemas:
+    Summary:
+      type: object
+      properties:
+        page:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            url:
+              type: string
+            updated_at:
+              type: string
+        status:
+          type: object
+          properties:
+            description:
+              type: string
+            indicator:
+              type: string
+        components:
+          type: array
+          items:
+            type: object
+            properties:
+              created_at:
+                type: string
+              description:
+                type: string
+              id:
+                type: string
+              name:
+                type: string
+              page_id:
+                type: string
+              position:
+                type: number
+              status:
+                type: string
+              updated_at:
+                type: string
+        incidents:
+          type: array
+          items:
+            type: object
+            properties:
+              created_at:
+                type: string
+              id:
+                type: string
+              impact:
+                type: string
+              incident_updates:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+                    created_at:
+                      type: string
+                    display_at:
+                      type: string
+                    id:
+                      type: string
+                    incident_id:
+                      type: string
+                    status:
+                      type: string
+                    updated_at:
+                      type: string
+              monitoring_at:
+                type: string
+              name:
+                type: number
+              page_id:
+                type: string
+              resolved_at:
+                type: string
+              shortlink:
+                type: string
+              status:
+                type: string
+              updated_at:
+                type: string
+        scheduled_maintenances:
+          type: array
+          items:
+            type: object
+            properties:
+              created_at:
+                type: string
+              id:
+                type: string
+              impact:
+                type: string
+              incident_updates:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+                    created_at:
+                      type: string
+                    display_at:
+                      type: string
+                    id:
+                      type: string
+                    incident_id:
+                      type: string
+                    status:
+                      type: string
+                    updated_at:
+                      type: string
+              monitoring_at:
+                type: string
+              name:
+                type: number
+              page_id:
+                type: string
+              resolved_at:
+                type: string
+              shortlink:
+                type: string
+              status:
+                type: string
+              updated_at:
+                type: string
+    Status:
+      type: object
+      properties:
+        page:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            url:
+              type: string
+            updated_url:
+              type: string
+        status:
+          type: object
+          properties:
+            description:
+              type: string
+            indicator:
+              type: string
+    Components:
+      type: object
+      properties:
+        page:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            url:
+              type: string
+            updated_url:
+              type: string
+        components:
+          type: array
+          items:
+            type: object
+            properties:
+              created_at:
+                type: string
+              description:
+                type: string
+              group:
+                type: string
+              group_id:
+                type: string
+              id:
+                type: string
+              name:
+                type: string
+              only_show_if_degraded:
+                type: string
+              page_id:
+                type: string
+              position:
+                type: string
+              showcase:
+                type: string
+              start_date:
+                type: string
+              status:
+                type: string
+              updated_at:
+                type: string
+    Incidents:
+      type: object
+      properties:
+        page:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            url:
+              type: string
+            updated_url:
+              type: string
+        incidents:
+          type: array
+          items:
+            type: object
+            properties:
+              created_at:
+                type: string
+              id:
+                type: string
+              impact:
+                type: string
+              incident_updates:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+                    created_at:
+                      type: string
+                    display_at:
+                      type: string
+                    id:
+                      type: string
+                    incident_id:
+                      type: string
+                    status:
+                      type: string
+                    updated_at:
+                      type: string
+              monitoring_at:
+                type: string
+              name:
+                type: number
+              page_id:
+                type: string
+              resolved_at:
+                type: string
+              shortlink:
+                type: string
+              status:
+                type: string
+              updated_at:
+                type: string
+    Maintenances:
+      type: object
+      properties:
+        page:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            url:
+              type: string
+            updated_url:
+              type: string
+        scheduled_maintenances:
+          type: array
+          items:
+            type: object
+            properties:
+              created_at:
+                type: string
+              id:
+                type: string
+              impact:
+                type: string
+              incident_updates:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+                    created_at:
+                      type: string
+                    display_at:
+                      type: string
+                    id:
+                      type: string
+                    incident_id:
+                      type: string
+                    status:
+                      type: string
+                    updated_at:
+                      type: string
+              monitoring_at:
+                type: string
+              name:
+                type: number
+              page_id:
+                type: string
+              resolved_at:
+                type: string
+              scheduled_for:
+                type: string
+              scheduled_until:
+                type: string
+              shortlink:
+                type: string
+              status:
+                type: string
+              updated_at:
+                type: string
+    Error:
+      type: object
+      properties:
+        statusCode: 
+          type: number
+          example: 400
+        error: 
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: Invalid query params
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              location:
+                type: string
+                example: params
+              param:
+                type: string
+                example: beerId
+              msg:
+                type: string
+                example: beerId must be a number and greater than 0
+              value:
+                type: string
+                example: page
