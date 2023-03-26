@@ -470,32 +470,4 @@ components:
                 type: string
               updated_at:
                 type: string
-    Error:
-      type: object
-      properties:
-        statusCode: 
-          type: number
-          example: 400
-        error: 
-          type: string
-          example: Bad Request
-        message:
-          type: string
-          example: Invalid query params
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              location:
-                type: string
-                example: params
-              param:
-                type: string
-                example: beerId
-              msg:
-                type: string
-                example: beerId must be a number and greater than 0
-              value:
-                type: string
-                example: page
+   
