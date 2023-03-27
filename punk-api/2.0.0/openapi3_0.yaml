@@ -44,63 +44,63 @@ paths:
             example: 10
         - name: abv_gt
           in: query
-          description: Filter beers by minimum ABV.
+          description: Filter by minimum ABV.
           required: false
           schema:
             type: number
             example: 4.5
         - name: abv_lt
           in: query
-          description: Filter beers by maximum ABV.
+          description: Filter by maximum ABV.
           required: false
           schema:
             type: number
             example: 8.5
         - name: ibu_gt
           in: query
-          description: Filter beers by minimum IBU.
+          description: Filter by minimum IBU.
           required: false
           schema:
             type: number
             example: 20
         - name: ibu_lt
           in: query
-          description: Filter beers by maximum IBU.
+          description: Filter by maximum IBU.
           required: false
           schema:
             type: number
             example: 60
         - name: ebc_gt
           in: query
-          description: Filter beers by minimum EBC.
+          description: Filter by minimum EBC.
           required: false
           schema:
             type: number
             example: 20
         - name: ebc_lt
           in: query
-          description: Filter beers by maximum EBC.
+          description: Filter by maximum EBC.
           required: false
           schema:
             type: number
             example: 20
         - name: beer_name
           in: query
-          description: Filter beers by name. If you need to add spaces, just add an underscore (_). 
+          description: Filter by name. If you need to add spaces, just add an underscore (_). 
           required: false
           schema:
             type: string
             example: punk
         - name: yeast
           in: query
-          description: Filter beers by yeast name. If you need to add spaces, use an underscore (_).
+          description: Filter by yeast name. If you need to add spaces, use an underscore (_).
           required: false
           schema:
             type: string
             example: american_ale
         - name: brewed_before
           in: query
-          description: Filter beers by maximum brewed date, format is mm-yyyy.
+          description: Filter by maximum brewed date, format is mm-yyyy.
           required: false
           schema:
             type: string
@@ -108,7 +108,7 @@ paths:
             example: 10-2011
         - name: brewed_after
           in: query
-          description: Filter beers by minimum brewed date, format is mm-yyyy.
+          description: Filter by minimum brewed date, format is mm-yyyy.
           required: false
           schema:
             type: string
@@ -116,28 +116,28 @@ paths:
             example: 10-2011
         - name: hops
           in: query
-          description: Filter beers by one of their hop names. If you need to add spaces, use an underscore (_).
+          description: Filter by one of their hop names. If you need to add spaces, use an underscore (_).
           required: false
           schema:
             type: string
             example: Fuggles
         - name: malt
           in: query
-          description: Filter beers by one of their malt names. If you need to add spaces, use an underscore (_).
+          description: Filter by one of their malt names. If you need to add spaces, use an underscore (_).
           required: false
           schema:
             type: string
             example: maris_otter_extra_pale
         - name: food
           in: query
-          description: Filter beers by matching one food string. If you need to add spaces, use an underscore (_).
+          description: Filter by matching one food string. If you need to add spaces, use an underscore (_).
           required: false
           schema:
             type: string
             example: spicy_chicken
         - name: ids
           in: query
-          description: Filter beers by their ID's. Filter multiple by using a pipe(|).
+          description: Filter by their ID's. Filter multiple by using a pipe(|).
           required: false
           schema:
             type: string
