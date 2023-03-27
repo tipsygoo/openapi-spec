@@ -2,13 +2,16 @@ openapi: 3.0.0
 info:
   title: Punk API
   description: |-
-    Have you ever wanted to search through Brewdog's expansive back catalogue of beer in a programmatic way? Maybe build a tool that pairs beer with food, or search beers with an abv of more than 4%? Well now your prayers have been answered!
+    Search through Brewdog's catalogue of beers in a programmatic way.
+    The Punk API takes Brewdog's DIY Dog and turns it into a searchable, filterable API.
 
-    The Punk API takes Brewdog's DIY Dog and turns it into a searchable, filterable API that's completely free and open source.
+    ABV stands for Alcohol By Volume
+    EBC stands for European Brewery Convention (color scheme, higher is darker)
+    IBU stands for International Bitterness Units (higher is bitter)
   license:
     name: MIT License
     url: https://raw.githubusercontent.com/sammdec/punkapi/master/LICENSE
-  version: 2.0.0
+  version: 2.0.1
 externalDocs:
   description: Find out more about Punk API
   url: https://punkapi.com
@@ -22,83 +25,82 @@ paths:
     get:
       tags:
         - beers
-      summary: Return the beers in ascending order.
-      description: Without any params the API will just return the beers in ascending order from their ID. Parameters are passed in as a query string and can be chained together.
-      operationId: list_beers
+      summary: Return the beers in ID ascending order.
+      operationId: listBeers
       parameters:
         - name: page
           in: query
-          description: Requests that return multiple items will be limited to 25 results by default. You can access other pages using this  paramater.
+          description: Page number. (1-indexed)
           required: false
           schema:
             type: number
             example: 1
         - name: per_page
           in: query
-          description: Increase the amount of beers returned in each request.
+          description: Results per page.
           required: false
           schema:
             type: number
-            example: 80
+            example: 10
         - name: abv_gt
           in: query
-          description: Returns all beers with ABV greater than the supplied number.
+          description: Filter beers by minimum ABV.
           required: false
           schema:
             type: number
             example: 4.5
         - name: abv_lt
           in: query
-          description: Returns all beers with ABV less than the supplied number.
+          description: Filter beers by maximum ABV.
           required: false
           schema:
             type: number
-            example: 4.5
+            example: 8.5
         - name: ibu_gt
           in: query
-          description: Returns all beers with IBU greater than the supplied number.
+          description: Filter beers by minimum IBU.
           required: false
           schema:
             type: number
-            example: 60
+            example: 20
         - name: ibu_lt
           in: query
-          description: Returns all beers with IBU less than the supplied number.
+          description: Filter beers by maximum IBU.
           required: false
           schema:
             type: number
             example: 60
         - name: ebc_gt
           in: query
-          description: Returns all beers with EBC greater than the supplied number.
+          description: Filter beers by minimum EBC.
           required: false
           schema:
             type: number
             example: 20
         - name: ebc_lt
           in: query
-          description: Returns all beers with EBC less than the supplied number.
+          description: Filter beers by maximum EBC.
           required: false
           schema:
             type: number
             example: 20
         - name: beer_name
           in: query
-          description: Returns all beers matching the supplied name (this will match partial strings as well so e.g punk will return Punk IPA), if you need to add spaces just add an underscore (_). 
+          description: Filter beers by name. If you need to add spaces, just add an underscore (_). 
           required: false
           schema:
             type: string
             example: punk
         - name: yeast
           in: query
-          description: Returns all beers matching the supplied yeast name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          description: Filter beers by yeast name. If you need to add spaces, use an underscore (_).
           required: false
           schema:
             type: string
             example: american_ale
         - name: brewed_before
           in: query
-          description: Returns all beers brewed before this date, the date format is mm-yyyy.
+          description: Filter beers by maximum brewed date, format is mm-yyyy.
           required: false
           schema:
             type: string
@@ -106,7 +108,7 @@ paths:
             example: 10-2011
         - name: brewed_after
           in: query
-          description: Returns all beers brewed after this date, the date format is mm-yyyy.
+          description: Filter beers by minimum brewed date, format is mm-yyyy.
           required: false
           schema:
             type: string
@@ -114,28 +116,28 @@ paths:
             example: 10-2011
         - name: hops
           in: query
-          description: Returns all beers matching the supplied hops name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          description: Filter beers by one of their hop names. If you need to add spaces, use an underscore (_).
           required: false
           schema:
             type: string
             example: Fuggles
         - name: malt
           in: query
-          description: Returns all beers matching the supplied malt name, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          description: Filter beers by one of their malt names. If you need to add spaces, use an underscore (_).
           required: false
           schema:
             type: string
             example: maris_otter_extra_pale
         - name: food
           in: query
-          description: Returns all beers matching the supplied food string, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
+          description: Filter beers by matching one food string. If you need to add spaces, use an underscore (_).
           required: false
           schema:
             type: string
             example: spicy_chicken
         - name: ids
           in: query
-          description: Returns all beers matching the supplied ID's. You can pass in multiple ID's by separating them with a | symbol. 
+          description: Filter beers by their ID's. Filter multiple by using a pipe(|).
           required: false
           schema:
             type: string
@@ -157,13 +159,10 @@ paths:
     get:
       tags:
         - beers
-      summary: Return the beers in ascending order.
-      description: Without any params the API will just return the beers in ascending order from their ID. Parameters are passed in as a query string and can be chained together.
-      operationId: get_beer
+      operationId: getBeerById
       parameters:
         - name: id
           in: path
-          description: Gets a beer from the api using the beers id.
           required: true
           schema:
             type: number
@@ -181,13 +180,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /beers/random:
     get:
       tags:
         - beers
-      summary: Return the beers in ascending order.
-      description: Without any params the API will just return the beers in ascending order from their ID. Parameters are passed in as a query string and can be chained together.
-      operationId: random_beer
+      operationId: getRandomBeer
       responses:
         '200':
           description: OK
