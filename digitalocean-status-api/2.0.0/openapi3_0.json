@@ -132,7 +132,7 @@
         ],
         "summary": "Get a list of any unresolved incidents.",
         "description": "This endpoint will only return incidents in the Investigating, Identified, or Monitoring state.",
-        "operationId": "unresolved_incidents",
+        "operationId": "unresolvedIncidents",
         "responses": {
           "200": {
             "description": "OK",
@@ -176,7 +176,7 @@
         ],
         "summary": "Get a list of any active maintenances.",
         "description": "This endpoint will only return scheduled maintenances in the In Progress or Verifying state.",
-        "operationId": "active_maintenances",
+        "operationId": "activeMaintenances",
         "responses": {
           "200": {
             "description": "OK",
@@ -198,7 +198,7 @@
         ],
         "summary": "Get a list of any upcoming maintenances.",
         "description": "This endpoint will only return scheduled maintenances still in the Scheduled state.",
-        "operationId": "upcoming_maintenances",
+        "operationId": "upcomingMaintenances",
         "responses": {
           "200": {
             "description": "OK",
