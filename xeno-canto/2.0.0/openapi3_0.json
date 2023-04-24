@@ -1,0 +1,591 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "xeno-canto",
+    "description": "Sharing wildlife sounds from around the world",
+    "license": {
+      "name": "CC",
+      "url": "https://xeno-canto.org/about/terms"
+    },
+    "version": "2.0.0"
+  },
+  "externalDocs": {
+    "description": "Find out more about xeno-canto",
+    "url": "https://xeno-canto.org/"
+  },
+  "servers": [
+    {
+      "url": "https://xeno-canto.org/api/2"
+    }
+  ],
+  "tags": [
+    {
+      "name": "xeno-canto",
+      "description": "Recordings"
+    }
+  ],
+  "paths": {
+    "/recordings": {
+      "get": {
+        "tags": [
+          "xeno-canto"
+        ],
+        "summary": "Retrieve wildlife sounds from all over the world.",
+        "description": "If you want to search for more specific details of a recording, you can use tags in your queries. \n\nTags are of the form tag:searchterm. In other words, the tag is a short string followed by a colon, followed by the term you want to search for. The tag specifies which field of the recording you want to search. \n\nSo for example, the query orthonyx cnt:papua loc:tari will only return results for birds in the genus Orthonyx that were recorded at a location whose name contains \"tari\" and that were recorded within a country whose name contains \"papua\". \n\nTo perform a tag search for a term that has multiple words, you must enclose the words in double quotes. For example, cnt:\"United States\"\n\nOccasionally, a wildcard search does not deliver the best results. You can prepend an '=' to many search terms to force an exact match. Such searches must also be enclosed in double quotes. E.g. use cnt:\"=niger\" to search for recordings from Niger, but not from Nigeria. Besides '=', also '>' (greater than) and '<' (less than) can be used for selected fields.\n\n**Group**\n- grp:soundscape or grp:0\n- grp:birds or grp:1\n- grp:grasshoppers or grp:2\n\n**Geographic coordinates**\n\nThe tags can be used to search within one degree in either direction of the given coordinate, for instance: lat:-12.234 lon:-69.98. This field also accepts '<' and '>' operators; e.g. use lat:\">66.5\" to search for all recordings made above the Arctic Circle. \nThe second tag allows you to search for recordings that occur within a given rectangle, and is called box. The general format of the box tag is as follows: box:LAT_MIN,LON_MIN,LAT_MAX,LON_MAX. \n\n**Sound type**\n\nTo search for recordings of a particular sound type, use the type tag.\n\nValid values for this tag are: aberrant, alarm call, begging call, call, calling song, courtship song, dawn song, disturbance song, drumming, duet, female song, flight call, flight song, imitation, nocturnal flight call, rivalry song, searching song, song, subsong.",
+        "operationId": "recordings",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Description",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "cnt:Brazil"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number. (1-indexed)",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "numRecordings": {
+                      "type": "string",
+                      "example": 1
+                    },
+                    "numSpecies": {
+                      "type": "string",
+                      "example": 1
+                    },
+                    "page": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "recordings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": 694038
+                          },
+                          "gen": {
+                            "type": "string",
+                            "example": "Troglodytes"
+                          },
+                          "sp": {
+                            "type": "string",
+                            "example": "troglodytes"
+                          },
+                          "ssp": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "group": {
+                            "type": "string",
+                            "example": "birds"
+                          },
+                          "en": {
+                            "type": "string",
+                            "example": "Eurasian Wren"
+                          },
+                          "rec": {
+                            "type": "string",
+                            "example": "Jacobo Ramil MIllarengo"
+                          },
+                          "cnt": {
+                            "type": "string",
+                            "example": "Spain"
+                          },
+                          "loc": {
+                            "type": "string",
+                            "example": "Sisalde, Ames, A Coru\\u00f1a, Galicia"
+                          },
+                          "lat": {
+                            "type": "string",
+                            "example": 42.8373
+                          },
+                          "lon": {
+                            "type": "string",
+                            "example": -8.652
+                          },
+                          "alt": {
+                            "type": "string",
+                            "example": 30
+                          },
+                          "type": {
+                            "type": "string",
+                            "example": "song"
+                          },
+                          "sex": {
+                            "type": "string",
+                            "example": "male"
+                          },
+                          "stage": {
+                            "type": "string",
+                            "example": "adult"
+                          },
+                          "method": {
+                            "type": "string",
+                            "example": "field recording"
+                          },
+                          "url": {
+                            "type": "string",
+                            "example": "\\/\\/xeno-canto.org\\/694038"
+                          },
+                          "file": {
+                            "type": "string",
+                            "example": "\\/\\/xeno-canto.org\\/694038\\/download"
+                          },
+                          "file-name": {
+                            "type": "string",
+                            "example": "XC694038-211223_02Carrizo variaci\\u00f3ns dunha frase bastante stereotipada siteD 9.30 Sisalde.mp3"
+                          },
+                          "sono": {
+                            "type": "object",
+                            "properties": {
+                              "small": {
+                                "type": "string",
+                                "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/ffts\\/XC694038-small.png"
+                              },
+                              "med": {
+                                "type": "string",
+                                "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/ffts\\/XC694038-med.png"
+                              },
+                              "large": {
+                                "type": "string",
+                                "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/ffts\\/XC694038-large.png"
+                              },
+                              "full": {
+                                "type": "string",
+                                "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/ffts\\/XC694038-full.png"
+                              }
+                            }
+                          },
+                          "osci": {
+                            "type": "object",
+                            "properties": {
+                              "small": {
+                                "type": "string",
+                                "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/wave\\/XC694038-small.png"
+                              },
+                              "med": {
+                                "type": "string",
+                                "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/wave\\/XC694038-med.png"
+                              },
+                              "large": {
+                                "type": "string",
+                                "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/wave\\/XC694038-large.png"
+                              }
+                            }
+                          },
+                          "lic": {
+                            "type": "string",
+                            "example": "\\/\\/creativecommons.org\\/licenses\\/by-nc-sa\\/4.0\\/"
+                          },
+                          "q": {
+                            "type": "string",
+                            "example": "A"
+                          },
+                          "lenght": {
+                            "type": "string",
+                            "example": "4:08"
+                          },
+                          "time": {
+                            "type": "string",
+                            "example": "09:30"
+                          },
+                          "date": {
+                            "type": "string",
+                            "example": "2021-12-23"
+                          },
+                          "uploaded": {
+                            "type": "string",
+                            "example": "2021-12-27"
+                          },
+                          "also": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": [
+                                "Turdus viscivorus",
+                                "Turdus iliacus",
+                                "Parus major"
+                              ]
+                            }
+                          },
+                          "rmk": {
+                            "type": "string",
+                            "example": "A male repeat a stereotyped phrase with few syllabic variation. HPF 270 Hz. It\\u00b4s raining."
+                          },
+                          "bird-seen": {
+                            "type": "string",
+                            "example": "yes"
+                          },
+                          "animal-seen": {
+                            "type": "string",
+                            "example": "yes"
+                          },
+                          "playback-used": {
+                            "type": "string",
+                            "example": "no"
+                          },
+                          "temp": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "regnr": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "auto": {
+                            "type": "string",
+                            "example": "unknown"
+                          },
+                          "dvc": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "mic": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "smp": {
+                            "type": "string",
+                            "example": 44100
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Bad Request"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid query params"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "location": {
+                            "type": "string",
+                            "example": "params"
+                          },
+                          "param": {
+                            "type": "string",
+                            "example": "beerId"
+                          },
+                          "msg": {
+                            "type": "string",
+                            "example": "beerId must be a number and greater than 0"
+                          },
+                          "value": {
+                            "type": "string",
+                            "example": "page"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Recordings": {
+        "type": "object",
+        "properties": {
+          "numRecordings": {
+            "type": "string",
+            "example": 1
+          },
+          "numSpecies": {
+            "type": "string",
+            "example": 1
+          },
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "recordings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": 694038
+                },
+                "gen": {
+                  "type": "string",
+                  "example": "Troglodytes"
+                },
+                "sp": {
+                  "type": "string",
+                  "example": "troglodytes"
+                },
+                "ssp": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "group": {
+                  "type": "string",
+                  "example": "birds"
+                },
+                "en": {
+                  "type": "string",
+                  "example": "Eurasian Wren"
+                },
+                "rec": {
+                  "type": "string",
+                  "example": "Jacobo Ramil MIllarengo"
+                },
+                "cnt": {
+                  "type": "string",
+                  "example": "Spain"
+                },
+                "loc": {
+                  "type": "string",
+                  "example": "Sisalde, Ames, A Coru\\u00f1a, Galicia"
+                },
+                "lat": {
+                  "type": "string",
+                  "example": 42.8373
+                },
+                "lon": {
+                  "type": "string",
+                  "example": -8.652
+                },
+                "alt": {
+                  "type": "string",
+                  "example": 30
+                },
+                "type": {
+                  "type": "string",
+                  "example": "song"
+                },
+                "sex": {
+                  "type": "string",
+                  "example": "male"
+                },
+                "stage": {
+                  "type": "string",
+                  "example": "adult"
+                },
+                "method": {
+                  "type": "string",
+                  "example": "field recording"
+                },
+                "url": {
+                  "type": "string",
+                  "example": "\\/\\/xeno-canto.org\\/694038"
+                },
+                "file": {
+                  "type": "string",
+                  "example": "\\/\\/xeno-canto.org\\/694038\\/download"
+                },
+                "file-name": {
+                  "type": "string",
+                  "example": "XC694038-211223_02Carrizo variaci\\u00f3ns dunha frase bastante stereotipada siteD 9.30 Sisalde.mp3"
+                },
+                "sono": {
+                  "type": "object",
+                  "properties": {
+                    "small": {
+                      "type": "string",
+                      "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/ffts\\/XC694038-small.png"
+                    },
+                    "med": {
+                      "type": "string",
+                      "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/ffts\\/XC694038-med.png"
+                    },
+                    "large": {
+                      "type": "string",
+                      "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/ffts\\/XC694038-large.png"
+                    },
+                    "full": {
+                      "type": "string",
+                      "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/ffts\\/XC694038-full.png"
+                    }
+                  }
+                },
+                "osci": {
+                  "type": "object",
+                  "properties": {
+                    "small": {
+                      "type": "string",
+                      "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/wave\\/XC694038-small.png"
+                    },
+                    "med": {
+                      "type": "string",
+                      "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/wave\\/XC694038-med.png"
+                    },
+                    "large": {
+                      "type": "string",
+                      "example": "\\/\\/xeno-canto.org\\/sounds\\/uploaded\\/LHCOINSOBZ\\/wave\\/XC694038-large.png"
+                    }
+                  }
+                },
+                "lic": {
+                  "type": "string",
+                  "example": "\\/\\/creativecommons.org\\/licenses\\/by-nc-sa\\/4.0\\/"
+                },
+                "q": {
+                  "type": "string",
+                  "example": "A"
+                },
+                "lenght": {
+                  "type": "string",
+                  "example": "4:08"
+                },
+                "time": {
+                  "type": "string",
+                  "example": "09:30"
+                },
+                "date": {
+                  "type": "string",
+                  "example": "2021-12-23"
+                },
+                "uploaded": {
+                  "type": "string",
+                  "example": "2021-12-27"
+                },
+                "also": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": [
+                      "Turdus viscivorus",
+                      "Turdus iliacus",
+                      "Parus major"
+                    ]
+                  }
+                },
+                "rmk": {
+                  "type": "string",
+                  "example": "A male repeat a stereotyped phrase with few syllabic variation. HPF 270 Hz. It\\u00b4s raining."
+                },
+                "bird-seen": {
+                  "type": "string",
+                  "example": "yes"
+                },
+                "animal-seen": {
+                  "type": "string",
+                  "example": "yes"
+                },
+                "playback-used": {
+                  "type": "string",
+                  "example": "no"
+                },
+                "temp": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "regnr": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "auto": {
+                  "type": "string",
+                  "example": "unknown"
+                },
+                "dvc": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "mic": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "smp": {
+                  "type": "string",
+                  "example": 44100
+                }
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "error": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid query params"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "example": "params"
+                },
+                "param": {
+                  "type": "string",
+                  "example": "beerId"
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "beerId must be a number and greater than 0"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "page"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
