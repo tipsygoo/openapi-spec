@@ -1,0 +1,1050 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Yu-Gi-Oh! API",
+    "description": "API for Yu-Gi-Oh card deck information.",
+    "version": "7.0.0"
+  },
+  "externalDocs": {
+    "description": "Find out more about Yu-Gi-Oh! API",
+    "url": "https://ygoprodeck.com/about/"
+  },
+  "servers": [
+    {
+      "url": "https://db.ygoprodeck.com/api/v7"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Cards",
+      "description": "Get information for the available cards."
+    }
+  ],
+  "paths": {
+    "/cardinfo.php": {
+      "get": {
+        "tags": [
+          "Cards"
+        ],
+        "summary": "Return information for all cards.",
+        "description": "Use the available params to filter out the response.\n\nMultiple comma separeted values allowed for id, type, race and attribute params.\n\nYou can use the following equation symbols for atk, def and level: \"lt\" (less than), \"lte\" (less than equals to), \"gt\" (greater than), \"gte\" (greater than equals to).\n\nExamples atk=lt2500 (atk is less than 2500), def=gte2000 (def is greater than or equal to 2000) and level=lte8 (level is less than or equal to 8).\n\nLanguages can only be queried on cardinfo.php and must be passed with &language= along with the language code.\n\nThe language codes are: fr for French, de for German, it for Italian and pt for Portuguese.",
+        "operationId": "cardInfo",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The exact name of the card. You can pass multiple | separated names to this parameter (Baby Dragon|Time Wizard).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Baby Dragon"
+            }
+          },
+          {
+            "name": "fname",
+            "in": "query",
+            "description": "A fuzzy search using a string. For example &fname=Magician to search by all cards with \"Magician\" in the name.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Magician"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The ID of the card. You cannot pass this alongside name.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 6983839
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "The type of card you want to filter by. See below \"Card Types Returned\" to see all available types.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "XYZ Monster"
+            }
+          },
+          {
+            "name": "atk",
+            "in": "query",
+            "description": "Filter by atk value.",
+            "schema": {
+              "type": "integer",
+              "example": 2100
+            }
+          },
+          {
+            "name": "def",
+            "in": "query",
+            "description": "Filter by def value.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 2000
+            }
+          },
+          {
+            "name": "level",
+            "in": "query",
+            "description": "Filter by card level/RANK.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 4
+            }
+          },
+          {
+            "name": "race",
+            "in": "query",
+            "description": "Filter by the card race which is officially called type. This is also used for Spell/Trap cards.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Insect"
+            }
+          },
+          {
+            "name": "attribute",
+            "in": "query",
+            "description": "Filter by the card attribute.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "WIND"
+            }
+          },
+          {
+            "name": "cardset",
+            "in": "query",
+            "description": "Filter the cards by card set.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Metal Raiders"
+            }
+          },
+          {
+            "name": "archetype",
+            "in": "query",
+            "description": "Filter the cards by archetype.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Blue-Eyes"
+            }
+          },
+          {
+            "name": "banlist",
+            "in": "query",
+            "description": "Filter the cards by banlist (TCG, OCG, Goat).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "TCG"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the order of the cards (atk, def, name, type, level, id, new).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "atk"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 74841885
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Sky Scourge Invicil"
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "Effect Monster"
+                      },
+                      "desc": {
+                        "type": "string",
+                        "example": "This card cannot be Special Summoned. If you Tribute..."
+                      },
+                      "atk": {
+                        "type": "integer",
+                        "example": 2200
+                      },
+                      "def": {
+                        "type": "integer",
+                        "example": 1600
+                      },
+                      "level": {
+                        "type": "integer",
+                        "example": 6
+                      },
+                      "race": {
+                        "type": "string",
+                        "example": "Fairy"
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "example": "EARTH"
+                      },
+                      "card_sets": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "set_name": {
+                              "type": "string",
+                              "example": "Force of the Breaker"
+                            },
+                            "set_code": {
+                              "type": "string",
+                              "example": "FOTB-EN023"
+                            },
+                            "set_rarity": {
+                              "type": "string",
+                              "example": "Super Rare"
+                            },
+                            "set_price": {
+                              "type": "string",
+                              "example": "$2.9"
+                            }
+                          }
+                        }
+                      },
+                      "card_images": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 34541863
+                            },
+                            "image_url": {
+                              "type": "string",
+                              "example": "https://images.ygoprodeck.com/images/cards/34541863.jpg"
+                            },
+                            "image_url_small": {
+                              "type": "string",
+                              "example": "https://images.ygoprodeck.com/images/cards_small/34541863.jpg"
+                            },
+                            "image_url_cropped": {
+                              "type": "string",
+                              "example": "https://images.ygoprodeck.com/images/cards_cropped/34541863.jpg"
+                            }
+                          }
+                        }
+                      },
+                      "card_prices": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "cardmarket_price": {
+                              "type": "string",
+                              "example": 0.42
+                            },
+                            "tcgplayer_price": {
+                              "type": "string",
+                              "example": 0.48
+                            },
+                            "ebay_price": {
+                              "type": "string",
+                              "example": 2.99
+                            },
+                            "amazon_price": {
+                              "type": "string",
+                              "example": 0.77
+                            },
+                            "coolstuffinc_price": {
+                              "type": "string",
+                              "example": 0.99
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "No valid parameter set. …rice', 'num', 'offset'."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/randomcard.php": {
+      "get": {
+        "tags": [
+          "Cards"
+        ],
+        "summary": "Get a random card.",
+        "operationId": "randomCard",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 74841885
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Sky Scourge Invicil"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "Effect Monster"
+                    },
+                    "desc": {
+                      "type": "string",
+                      "example": "This card cannot be Special Summoned. If you Tribute..."
+                    },
+                    "atk": {
+                      "type": "integer",
+                      "example": 2200
+                    },
+                    "def": {
+                      "type": "integer",
+                      "example": 1600
+                    },
+                    "level": {
+                      "type": "integer",
+                      "example": 6
+                    },
+                    "race": {
+                      "type": "string",
+                      "example": "Fairy"
+                    },
+                    "attribute": {
+                      "type": "string",
+                      "example": "EARTH"
+                    },
+                    "card_sets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "set_name": {
+                            "type": "string",
+                            "example": "Force of the Breaker"
+                          },
+                          "set_code": {
+                            "type": "string",
+                            "example": "FOTB-EN023"
+                          },
+                          "set_rarity": {
+                            "type": "string",
+                            "example": "Super Rare"
+                          },
+                          "set_price": {
+                            "type": "string",
+                            "example": "$2.9"
+                          }
+                        }
+                      }
+                    },
+                    "card_images": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 34541863
+                          },
+                          "image_url": {
+                            "type": "string",
+                            "example": "https://images.ygoprodeck.com/images/cards/34541863.jpg"
+                          },
+                          "image_url_small": {
+                            "type": "string",
+                            "example": "https://images.ygoprodeck.com/images/cards_small/34541863.jpg"
+                          },
+                          "image_url_cropped": {
+                            "type": "string",
+                            "example": "https://images.ygoprodeck.com/images/cards_cropped/34541863.jpg"
+                          }
+                        }
+                      }
+                    },
+                    "card_prices": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "cardmarket_price": {
+                            "type": "string",
+                            "example": 0.42
+                          },
+                          "tcgplayer_price": {
+                            "type": "string",
+                            "example": 0.48
+                          },
+                          "ebay_price": {
+                            "type": "string",
+                            "example": 2.99
+                          },
+                          "amazon_price": {
+                            "type": "string",
+                            "example": 0.77
+                          },
+                          "coolstuffinc_price": {
+                            "type": "string",
+                            "example": 0.99
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "No valid parameter set. …rice', 'num', 'offset'."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cardsets.php": {
+      "get": {
+        "tags": [
+          "Cards"
+        ],
+        "summary": "Get all of the current Yu-Gi-Oh! Card Set Names we have stored in the database.",
+        "operationId": "cardsets",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 74841885
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Sky Scourge Invicil"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "Effect Monster"
+                    },
+                    "desc": {
+                      "type": "string",
+                      "example": "This card cannot be Special Summoned. If you Tribute..."
+                    },
+                    "atk": {
+                      "type": "integer",
+                      "example": 2200
+                    },
+                    "def": {
+                      "type": "integer",
+                      "example": 1600
+                    },
+                    "level": {
+                      "type": "integer",
+                      "example": 6
+                    },
+                    "race": {
+                      "type": "string",
+                      "example": "Fairy"
+                    },
+                    "attribute": {
+                      "type": "string",
+                      "example": "EARTH"
+                    },
+                    "card_sets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "set_name": {
+                            "type": "string",
+                            "example": "Force of the Breaker"
+                          },
+                          "set_code": {
+                            "type": "string",
+                            "example": "FOTB-EN023"
+                          },
+                          "set_rarity": {
+                            "type": "string",
+                            "example": "Super Rare"
+                          },
+                          "set_price": {
+                            "type": "string",
+                            "example": "$2.9"
+                          }
+                        }
+                      }
+                    },
+                    "card_images": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 34541863
+                          },
+                          "image_url": {
+                            "type": "string",
+                            "example": "https://images.ygoprodeck.com/images/cards/34541863.jpg"
+                          },
+                          "image_url_small": {
+                            "type": "string",
+                            "example": "https://images.ygoprodeck.com/images/cards_small/34541863.jpg"
+                          },
+                          "image_url_cropped": {
+                            "type": "string",
+                            "example": "https://images.ygoprodeck.com/images/cards_cropped/34541863.jpg"
+                          }
+                        }
+                      }
+                    },
+                    "card_prices": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "cardmarket_price": {
+                            "type": "string",
+                            "example": 0.42
+                          },
+                          "tcgplayer_price": {
+                            "type": "string",
+                            "example": 0.48
+                          },
+                          "ebay_price": {
+                            "type": "string",
+                            "example": 2.99
+                          },
+                          "amazon_price": {
+                            "type": "string",
+                            "example": 0.77
+                          },
+                          "coolstuffinc_price": {
+                            "type": "string",
+                            "example": 0.99
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "No valid parameter set. …rice', 'num', 'offset'."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cardsetsinfo.php": {
+      "get": {
+        "tags": [
+          "Cards"
+        ],
+        "summary": "Get information for a specific card set.",
+        "operationId": "cardsetsInfo",
+        "parameters": [
+          {
+            "name": "setcode",
+            "in": "query",
+            "description": "Card set code",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "SDY-046"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 54652250
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Man-Eater Bug"
+                    },
+                    "set_name": {
+                      "type": "string",
+                      "example": "Starter Deck Yugi"
+                    },
+                    "set_code": {
+                      "type": "string",
+                      "example": "SDY-046"
+                    },
+                    "set_rarity": {
+                      "type": "string",
+                      "example": "Common"
+                    },
+                    "set_price": {
+                      "type": "string",
+                      "example": 2.25
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "No valid parameter set. …rice', 'num', 'offset'."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/archetypes.php": {
+      "get": {
+        "tags": [
+          "Cards"
+        ],
+        "summary": "This returns all of the current Yu-Gi-Oh! Card Archetype Names in the database.",
+        "operationId": "archetypes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "archetype_name": {
+                        "type": "string",
+                        "example": "A.I."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "No valid parameter set. …rice', 'num', 'offset'."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Card": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 74841885
+          },
+          "name": {
+            "type": "string",
+            "example": "Sky Scourge Invicil"
+          },
+          "type": {
+            "type": "string",
+            "example": "Effect Monster"
+          },
+          "desc": {
+            "type": "string",
+            "example": "This card cannot be Special Summoned. If you Tribute..."
+          },
+          "atk": {
+            "type": "integer",
+            "example": 2200
+          },
+          "def": {
+            "type": "integer",
+            "example": 1600
+          },
+          "level": {
+            "type": "integer",
+            "example": 6
+          },
+          "race": {
+            "type": "string",
+            "example": "Fairy"
+          },
+          "attribute": {
+            "type": "string",
+            "example": "EARTH"
+          },
+          "card_sets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "set_name": {
+                  "type": "string",
+                  "example": "Force of the Breaker"
+                },
+                "set_code": {
+                  "type": "string",
+                  "example": "FOTB-EN023"
+                },
+                "set_rarity": {
+                  "type": "string",
+                  "example": "Super Rare"
+                },
+                "set_price": {
+                  "type": "string",
+                  "example": "$2.9"
+                }
+              }
+            }
+          },
+          "card_images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "example": 34541863
+                },
+                "image_url": {
+                  "type": "string",
+                  "example": "https://images.ygoprodeck.com/images/cards/34541863.jpg"
+                },
+                "image_url_small": {
+                  "type": "string",
+                  "example": "https://images.ygoprodeck.com/images/cards_small/34541863.jpg"
+                },
+                "image_url_cropped": {
+                  "type": "string",
+                  "example": "https://images.ygoprodeck.com/images/cards_cropped/34541863.jpg"
+                }
+              }
+            }
+          },
+          "card_prices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cardmarket_price": {
+                  "type": "string",
+                  "example": 0.42
+                },
+                "tcgplayer_price": {
+                  "type": "string",
+                  "example": 0.48
+                },
+                "ebay_price": {
+                  "type": "string",
+                  "example": 2.99
+                },
+                "amazon_price": {
+                  "type": "string",
+                  "example": 0.77
+                },
+                "coolstuffinc_price": {
+                  "type": "string",
+                  "example": 0.99
+                }
+              }
+            }
+          }
+        }
+      },
+      "Cards": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 74841885
+            },
+            "name": {
+              "type": "string",
+              "example": "Sky Scourge Invicil"
+            },
+            "type": {
+              "type": "string",
+              "example": "Effect Monster"
+            },
+            "desc": {
+              "type": "string",
+              "example": "This card cannot be Special Summoned. If you Tribute..."
+            },
+            "atk": {
+              "type": "integer",
+              "example": 2200
+            },
+            "def": {
+              "type": "integer",
+              "example": 1600
+            },
+            "level": {
+              "type": "integer",
+              "example": 6
+            },
+            "race": {
+              "type": "string",
+              "example": "Fairy"
+            },
+            "attribute": {
+              "type": "string",
+              "example": "EARTH"
+            },
+            "card_sets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "set_name": {
+                    "type": "string",
+                    "example": "Force of the Breaker"
+                  },
+                  "set_code": {
+                    "type": "string",
+                    "example": "FOTB-EN023"
+                  },
+                  "set_rarity": {
+                    "type": "string",
+                    "example": "Super Rare"
+                  },
+                  "set_price": {
+                    "type": "string",
+                    "example": "$2.9"
+                  }
+                }
+              }
+            },
+            "card_images": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 34541863
+                  },
+                  "image_url": {
+                    "type": "string",
+                    "example": "https://images.ygoprodeck.com/images/cards/34541863.jpg"
+                  },
+                  "image_url_small": {
+                    "type": "string",
+                    "example": "https://images.ygoprodeck.com/images/cards_small/34541863.jpg"
+                  },
+                  "image_url_cropped": {
+                    "type": "string",
+                    "example": "https://images.ygoprodeck.com/images/cards_cropped/34541863.jpg"
+                  }
+                }
+              }
+            },
+            "card_prices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "cardmarket_price": {
+                    "type": "string",
+                    "example": 0.42
+                  },
+                  "tcgplayer_price": {
+                    "type": "string",
+                    "example": 0.48
+                  },
+                  "ebay_price": {
+                    "type": "string",
+                    "example": 2.99
+                  },
+                  "amazon_price": {
+                    "type": "string",
+                    "example": 0.77
+                  },
+                  "coolstuffinc_price": {
+                    "type": "string",
+                    "example": 0.99
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "CardSets": {
+        "type": "object",
+        "properties": {
+          "set_name": {
+            "type": "string",
+            "example": "2017 Mega-Tins"
+          },
+          "set_code": {
+            "type": "string",
+            "example": "YS15"
+          },
+          "num_of_cards": {
+            "type": "integer",
+            "example": 42
+          },
+          "tcg_date": {
+            "type": "string",
+            "example": "2015-05-28"
+          },
+          "set_image": {
+            "type": "string",
+            "example": "https://images.ygoprodeck.com/images/sets/YS15.jpg"
+          }
+        }
+      },
+      "CardInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 54652250
+          },
+          "name": {
+            "type": "string",
+            "example": "Man-Eater Bug"
+          },
+          "set_name": {
+            "type": "string",
+            "example": "Starter Deck Yugi"
+          },
+          "set_code": {
+            "type": "string",
+            "example": "SDY-046"
+          },
+          "set_rarity": {
+            "type": "string",
+            "example": "Common"
+          },
+          "set_price": {
+            "type": "string",
+            "example": 2.25
+          }
+        }
+      },
+      "Archetypes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "archetype_name": {
+              "type": "string",
+              "example": "A.I."
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "No valid parameter set. …rice', 'num', 'offset'."
+          }
+        }
+      }
+    }
+  }
+}
