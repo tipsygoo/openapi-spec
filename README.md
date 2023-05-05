@@ -6,3 +6,4 @@ OpenApi spec repository for some free APIs
 - [DigitalOcean Status API](https://status.digitalocean.com/api)
 - [PUNK API](https://punkapi.com/)
 - [Swiss Public Transport API](https://transport.opendata.ch/)
+- [Xeno-Canto API](https://xeno-canto.org/)
