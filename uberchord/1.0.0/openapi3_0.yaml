@@ -64,7 +64,7 @@ paths:
       summary: Get a chord by multiple properties.
       operationId: getChords
       parameters:
-        - name: name_like
+        - name: nameLike
           in: query
           description: Searching multiple chords by name that does not have to match exactly to the provided name.
           required: false
