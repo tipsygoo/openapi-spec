@@ -1,0 +1,204 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "uberchord",
+    "description": "Learn guitar fast\n\nUberchord API contains a big database of guitar chords that can be queried.\n\nThe chord name consists of the following pattern: \"root, quality,tension,bass\".\n\nNot all components of the pattern are required. For instance E7#5#9 can be descibed as E,,7#5#9.\n\nComponents are interpreted as follows:\n- root = E\n- quality = empty\n- tension = 7#5#9\n- bass = empty\n\nStrings pattern generally consists of numbers of frets that has to be fingered down by a guitarist for each specific string. Although, because often not all strings are fingered, there are two additional special symbols reserved:\n\n- 0 (zero) - used when string stays opened\n- X - used when string is not played\n- black dot - used for fret number position\n\nThe pattern elements (fret numbers) are ordered from the highest to the lowest string and each element is separated by space character.\n\nFingering pattern looks similarly to the strings pattern. The element values of which it consists of also correspond to the strings in order from the highest string to the lowest string as it is in strings pattern. However, the values inside this pattern are finger numbers to be denoted on finger down dots presented on chord diagrams.\n\nAs it was highlighted in the strings pattern, often not all strings are fingered down by the guitarist. Hence, analogously to the strings pattern, there is special symbol X used for strings that are not fingered down (namely opened or not played strings).",
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "Uberchord API guide",
+    "url": "https://api.uberchord.com/"
+  },
+  "servers": [
+    {
+      "url": "https://api.uberchord.com/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "chords"
+    }
+  ],
+  "paths": {
+    "/chords/{chordName}": {
+      "get": {
+        "tags": [
+          "chords"
+        ],
+        "summary": "Get the one specific chord by it's unique name.",
+        "operationId": "getChordByName",
+        "parameters": [
+          {
+            "name": "chordName",
+            "in": "path",
+            "description": "The pattern is similar to the pattern described before, except that quality and tension components are merged into one. For instance Fmaj7 would be F_maj7",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "F_maj7"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "strings": {
+                        "type": "string",
+                        "example": "1 X 2 2 1 0"
+                      },
+                      "fingering": {
+                        "type": "string",
+                        "example": "1 X 3 4 2 X"
+                      },
+                      "chordName": {
+                        "type": "string",
+                        "example": "F,maj,7,"
+                      },
+                      "enharmonicChordName": {
+                        "type": "string",
+                        "example": "F,maj,7,"
+                      },
+                      "voicingID": {
+                        "type": "string",
+                        "example": 9223372036855892000
+                      },
+                      "tones": {
+                        "type": "string",
+                        "example": "F,A,C,E"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chords": {
+      "get": {
+        "tags": [
+          "chords"
+        ],
+        "summary": "Get a chord by multiple properties.",
+        "operationId": "getChords",
+        "parameters": [
+          {
+            "name": "nameLike",
+            "in": "query",
+            "description": "Searching multiple chords by name that does not have to match exactly to the provided name.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "F_maj7"
+            }
+          },
+          {
+            "name": "names",
+            "in": "query",
+            "description": "Searching multiple chords by exact names.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "F_maj7,E_m7b5"
+            }
+          },
+          {
+            "name": "voicing",
+            "in": "query",
+            "description": "Searching multiple chords by voicing pattern.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "1-X-2-2-1-0,0-X-2-4-2-4"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "strings": {
+                        "type": "string",
+                        "example": "1 X 2 2 1 0"
+                      },
+                      "fingering": {
+                        "type": "string",
+                        "example": "1 X 3 4 2 X"
+                      },
+                      "chordName": {
+                        "type": "string",
+                        "example": "F,maj,7,"
+                      },
+                      "enharmonicChordName": {
+                        "type": "string",
+                        "example": "F,maj,7,"
+                      },
+                      "voicingID": {
+                        "type": "string",
+                        "example": 9223372036855892000
+                      },
+                      "tones": {
+                        "type": "string",
+                        "example": "F,A,C,E"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Chord": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "strings": {
+              "type": "string",
+              "example": "1 X 2 2 1 0"
+            },
+            "fingering": {
+              "type": "string",
+              "example": "1 X 3 4 2 X"
+            },
+            "chordName": {
+              "type": "string",
+              "example": "F,maj,7,"
+            },
+            "enharmonicChordName": {
+              "type": "string",
+              "example": "F,maj,7,"
+            },
+            "voicingID": {
+              "type": "string",
+              "example": 9223372036855892000
+            },
+            "tones": {
+              "type": "string",
+              "example": "F,A,C,E"
+            }
+          }
+        }
+      }
+    }
+  }
+}
