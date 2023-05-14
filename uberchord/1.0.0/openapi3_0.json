@@ -20,7 +20,7 @@
     }
   ],
   "paths": {
-    "/chords/{chordName}": {
+    "/chords/{chord_name}": {
       "get": {
         "tags": [
           "chords"
@@ -29,7 +29,7 @@
         "operationId": "getChordByName",
         "parameters": [
           {
-            "name": "chordName",
+            "name": "chord_name",
             "in": "path",
             "description": "The pattern is similar to the pattern described before, except that quality and tension components are merged into one. For instance Fmaj7 would be F_maj7",
             "required": true,
@@ -91,7 +91,7 @@
         "operationId": "getChords",
         "parameters": [
           {
-            "name": "nameLike",
+            "name": "name_like",
             "in": "query",
             "description": "Searching multiple chords by name that does not have to match exactly to the provided name.",
             "required": false,
